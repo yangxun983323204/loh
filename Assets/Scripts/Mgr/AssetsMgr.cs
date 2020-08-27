@@ -17,7 +17,7 @@ public class AssetsMgr : SingletonMono<AssetsMgr>
         _goPoolRoot.gameObject.SetActive(false);
     }
 
-    public IEnumerator Get(string key)
+    public IEnumerator Get<T>(string key) where T:UnityEngine.Object
     {
         Object inst = null;
         if (_instPool.ContainsKey(key))
@@ -28,6 +28,7 @@ public class AssetsMgr : SingletonMono<AssetsMgr>
             {
                 _instPool.Remove(key);
             }
+            (inst as GameObject).transform.SetParent(null);
             yield return inst;
             yield break;
         }
@@ -39,20 +40,16 @@ public class AssetsMgr : SingletonMono<AssetsMgr>
             goto tag_instant;
         }
 
-        var req = Resources.LoadAsync(key);
+        var req = Resources.LoadAsync<T>(key);
         yield return req;
-        var a = req.asset;
-        if (a != null)
-            _pool.Add(key, a);
+        origin = req.asset;
+        if (origin != null)
+            _pool.Add(key, origin);
 
-        yield return a;
     tag_instant:
         if (origin is GameObject)
         {
             inst = Instantiate(origin);
-            var nlist = new List<Object>(1);
-            nlist.Add(inst);
-            _instPool.Add(key, nlist);
             yield return inst;
         }
         else

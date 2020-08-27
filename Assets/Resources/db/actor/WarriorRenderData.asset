@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdbd8b41bea0caa4d8fe3305e768ce4d, type: 3}
+  m_Name: WarriorRenderData
+  m_EditorClassIdentifier: Game::ActorRenderData
+  AssetId: Actor/Warrior
+  CenterPath: center
+  CreateAnim: create
+  CreateAnimTime: 0.5
+  IdleAnim: idle
+  DamageAnim: damage
+  DamageAnimTime: 0.2
+  HitAnim: hit
+  HitAnimTime: 0.2
+  DeathAnim: death
+  DeathAnimTime: 1
+  SkillAnim1: skill1
+  SkillAnim1Time: 1
+  SkillAnim2: skill2
+  SkillAnim2Time: 1

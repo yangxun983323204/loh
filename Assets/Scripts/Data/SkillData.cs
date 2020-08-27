@@ -27,9 +27,3 @@ public class SkillData
     public float HitAnimTime1;
     public float HitAnimTime2;
 }
-
-[CreateAssetMenu(fileName = "NewSkillDB", menuName = "LOH/SkillDB")]
-public class SkillDB : ScriptableObject
-{
-    public SkillData[] Skills;
-}

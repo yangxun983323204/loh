@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ef5ed942b3e0c41bffe9144ebc2fbb, type: 3}
-  m_Name: Warrior
+  m_Script: {fileID: 0}
+  m_Name: Enemy
   m_EditorClassIdentifier: Game::Actor
   Data: {fileID: 11400000, guid: 953fccc9b6230704082172a4b9042101, type: 2}
-  RenderData: {fileID: 11400000, guid: e125aaf040dec35498c5126672fe8f49, type: 2}
+  RenderData: {fileID: 11400000, guid: 927983583a050104598dee191d98e8ae, type: 2}

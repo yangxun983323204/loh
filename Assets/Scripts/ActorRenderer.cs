@@ -2,18 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Actor : MonoBehaviour
+public class ActorRenderer : MonoBehaviour
 {
-    public ActorData Data;
-    public ActorRenderData RenderData;
-    public List<Effect> Effects;
+    public Actor Target;
     public Transform Center;
 
     private Animator _anim;
 
-    public IEnumerator Cast(Actor target,SkillData skill)
+    public IEnumerator Appear()
     {
-        _anim.Play(RenderData.HitAnim);
+        if (Target.RenderData.CreateAnimTime > 0)
+        {
+            _anim.Play(Target.RenderData.CreateAnim);
+            yield return new WaitForSeconds(Target.RenderData.CreateAnimTime);
+        }
+    }
+
+    public IEnumerator Cast(ActorRenderer target,SkillData skill)
+    {
+        _anim.Play(Target.RenderData.HitAnim);
         if (skill.SpellAnimTime > 0)
         {
             yield return SkillEffectMgr.Instance.StartEffect(this,skill.SpellAnim, skill.SpellAnimTime);
@@ -30,33 +37,39 @@ public class Actor : MonoBehaviour
 
         for (int i = 0; i < skill.Effects.Length; i++)
         {
-            EffectMgr.Instance.ApplyEffect(target,skill.Effects[i], skill.EffectsValue[1]);
+            EffectMgr.Instance.ApplyEffect(target.Target,skill.Effects[i], skill.EffectsValue[1]);
         }
         yield return new WaitForSeconds(skill.HitAnimTime2);
     }
 
+    public IEnumerator Dispose()
+    {
+        yield break;
+    }
 
     protected virtual IEnumerator EffectHeal(float value)
     {
-        Data.CurrHp += Mathf.FloorToInt(value);
-        Data.CurrHp = Mathf.Clamp(Data.CurrHp, 0, Data.MaxHp);
+        Target.Data.CurrHp += Mathf.FloorToInt(value);
+        Target.Data.CurrHp = Mathf.Clamp(Target.Data.CurrHp, 0, Target.Data.MaxHp);
         yield break;
     }
 
     protected virtual IEnumerator EffectDamage(float value)
     {
-        Data.CurrHp -= Mathf.FloorToInt(value);
-        Data.CurrHp = Mathf.Clamp(Data.CurrHp, 0, Data.MaxHp);
+        Target.Data.CurrHp -= Mathf.FloorToInt(value);
+        Target.Data.CurrHp = Mathf.Clamp(Target.Data.CurrHp, 0, Target.Data.MaxHp);
         yield break;
     }
 
     protected virtual void Start()
     {
-        Center = transform.Find(RenderData.CenterPath);
+        Target.Renderer = this;
+        _anim = GetComponent<Animator>();
+        Center = transform.Find(Target.RenderData.CenterPath);
     }
 
     protected virtual void OnDestroy()
     {
-        
+        Target.Renderer = null;
     }
 }
