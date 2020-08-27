@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: fdbd8b41bea0caa4d8fe3305e768ce4d, type: 3}
   m_Name: WarriorFlipRenderData
   m_EditorClassIdentifier: Game::ActorRenderData
   AssetId: Actor/WarriorFlip
   CenterPath: center
   CreateAnim: create
-  CreateAnimTime: 0.5
+  CreateAnimTime: 0
   IdleAnim: idle
   DamageAnim: damage
   DamageAnimTime: 0.2

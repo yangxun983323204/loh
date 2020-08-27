@@ -18,7 +18,6 @@ public class SkillData
     public float ATK;
     public float Heal;
     public int[] Effects;
-    public int[] EffectsValue;
     // render
     public string SpellAnim;
     public float SpellAnimTime;

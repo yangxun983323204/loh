@@ -2,18 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Effect
-{
-    public int Code;
-
-    public Effect()
-    { }
-
-    public abstract void SetValue(int value);
-    public abstract void Update();
-    public abstract Effect Clone();
-}
-
 public class EffectMgr : SingletonMono<EffectMgr>
 {
     private Dictionary<int, Effect> _effects;
@@ -23,10 +11,9 @@ public class EffectMgr : SingletonMono<EffectMgr>
         _effects.Add(effect.Code, effect);
     }
 
-    public void ApplyEffect(Actor actor,int code,int value)
+    public void ApplyEffect(Actor actor,int code)
     {
-        var e = _effects[code].Clone();
-        e.SetValue(value);
+        var e = Instantiate(_effects[code]);
         actor.Effects.Add(e);
     }
 
@@ -34,7 +21,7 @@ public class EffectMgr : SingletonMono<EffectMgr>
     {
         foreach (var e in actor.Effects)
         {
-            e.Update();
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -34,7 +34,7 @@ public class BattleMgr : SingletonMono<BattleMgr>
         var animList = new List<Actor>(players.Length + enemies.Length);
         animList.AddRange(players);
         animList.AddRange(enemies);
-        yield return animList.Select(actor => StartCoroutine(actor.Renderer.Appear()));
+        yield return animList.Select(actor => StartCoroutine(actor.Renderer.Appear())).GetEnumerator();
         StopCoroutine("BeginTurn");
         _turnHandler = StartCoroutine(BeginTurn());
     }
@@ -45,7 +45,7 @@ public class BattleMgr : SingletonMono<BattleMgr>
         var actors = new List<Actor>(_players.Count + _enemies.Count);
         actors.AddRange(_players);
         actors.AddRange(_enemies);
-        yield return actors.Select(actor => StartCoroutine(actor.Renderer.Dispose()));
+        yield return actors.Select(actor => StartCoroutine(actor.Renderer.Dispose())).GetEnumerator();
         for (int i = 0; i < actors.Count; i++)
         {
             var actor = actors[i];

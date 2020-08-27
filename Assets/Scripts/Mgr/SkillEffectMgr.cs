@@ -31,7 +31,7 @@ public class SkillEffectMgr : SingletonMono<SkillEffectMgr>
     {
         effect.transform.SetParent(actor.Center);
         effect.transform.localPosition = Vector3.zero;
-        effect.tag = "key";
+        effect.name = key;
         effect.GetComponent<ParticleSystem>().Play();
         yield return new WaitForSeconds(time);
         AssetsMgr.Instance.Recycle(key, effect);
@@ -42,7 +42,7 @@ public class SkillEffectMgr : SingletonMono<SkillEffectMgr>
         for (int i = 0; i < actor.Center.childCount; i++)
         {
             var c = actor.Center.GetChild(i);
-            if (c.tag == key)
+            if (c.name == key)
             {
                 AssetsMgr.Instance.Recycle(key, c.gameObject);
                 break;

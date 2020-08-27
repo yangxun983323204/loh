@@ -15,7 +15,7 @@ MonoBehaviour:
   AssetId: Actor/Warrior
   CenterPath: center
   CreateAnim: create
-  CreateAnimTime: 0.5
+  CreateAnimTime: 0
   IdleAnim: idle
   DamageAnim: damage
   DamageAnimTime: 0.2
