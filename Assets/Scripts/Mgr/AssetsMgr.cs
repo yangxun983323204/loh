@@ -1,70 +1,92 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YX;
+
+using GoPool = YX.Pool<UnityEngine.GameObject>;
 
 public class AssetsMgr : SingletonMono<AssetsMgr>
 {
-    Dictionary<string, Object> _pool = new Dictionary<string, Object>();
-    Dictionary<string, List<Object>> _instPool = new Dictionary<string, List<Object>>();
+    Dictionary<string, Object> _sharePools = new Dictionary<string, Object>();
+    Dictionary<string, GoPool> _instPools = new Dictionary<string, GoPool>();
     Transform _goPoolRoot;
-
-    protected override void OnInit()
-    {
-        base.OnInit();
-        var poolRoot = new GameObject("pool");
-        _goPoolRoot = poolRoot.transform;
-        _goPoolRoot.SetParent(transform);
-        _goPoolRoot.gameObject.SetActive(false);
-    }
+    DictAccessor<string, bool> _loading = new DictAccessor<string, bool>();
 
     public IEnumerator Get<T>(string key) where T:UnityEngine.Object
     {
-        Object inst = null;
-        if (_instPool.ContainsKey(key))
+        if (_loading.Get(key, false))
+            yield return new WaitUntil(() => _loading.Get(key, false));
+
+        bool isGo = typeof(T) == typeof(GameObject);
+        if (isGo && _instPools.ContainsKey(key))
         {
-            var list = _instPool[key];
-            inst = list[list.Count - 1];
-            if(list.Count <= 1)
-            {
-                _instPool.Remove(key);
-            }
-            (inst as GameObject).transform.SetParent(null);
-            yield return inst;
+            yield return _instPools[key];
+            yield break;
+        }
+        else if (!isGo && _sharePools.ContainsKey(key))
+        {
+            yield return _sharePools[key];
             yield break;
         }
 
-        Object origin = null;
-        if (_pool.ContainsKey(key))
-        {
-            origin = _pool[key];
-            goto tag_instant;
-        }
-
+        _loading.Set(key, true);
         var req = Resources.LoadAsync<T>(key);
         yield return req;
-        origin = req.asset;
-        if (origin != null)
-            _pool.Add(key, origin);
-
-    tag_instant:
-        if (origin is GameObject)
+        _loading.Set(key, false);
+        var origin = req.asset;
+        if (isGo)
         {
-            inst = Instantiate(origin);
-            yield return inst;
+            Debug.Assert(origin is GameObject);
+            var pool = new GoPool();
+            pool.SetTemplate(Instantiate(origin as GameObject), new GameObjectAllocator());
+            _instPools.Add(key, pool);
+            yield return pool;
         }
         else
+        {
+            _sharePools.Add(key, origin);
             yield return origin;
+        }
+    }
+
+    public IEnumerator Prepare<T>(string key,int count) where T : UnityEngine.Object
+    {
+        if (_loading.Get(key, false))
+            yield return new WaitUntil(() => _loading.Get(key, false));
+
+        bool isGo = typeof(T) == typeof(GameObject);
+        if (isGo && _instPools.ContainsKey(key))
+            yield break;
+        else if (!isGo && _sharePools.ContainsKey(key))
+            yield break;
+
+        _loading.Set(key, true);
+        var req = Resources.LoadAsync<T>(key);
+        yield return req;
+        _loading.Set(key, false);
+        var origin = req.asset;
+        if (isGo)
+        {
+            Debug.Assert(origin is GameObject);
+            var pool = new GoPool();
+            pool.SetTemplate(Instantiate(origin as GameObject), new GameObjectAllocator());
+            _instPools.Add(key, pool);
+            pool.Reserve((uint)count);
+        }
+        else
+        {
+            _sharePools.Add(key, origin);
+        }
     }
 
     public void Recycle(string key,Object asset)
     {
         if (asset is GameObject)
         {
-            (asset as GameObject).transform.SetParent(_goPoolRoot);
-            if (!_instPool.ContainsKey(key))
-                _instPool.Add(key, new List<Object>(1));
+            if (!_instPools.ContainsKey(key))
+                return;
 
-            _instPool[key].Add(asset);
+            _instPools[key].Recycle(asset as GameObject);
         }
     }
 }
@@ -73,6 +95,11 @@ public static class IEnumeratorEx
 {
     public static T Asset<T>(this IEnumerator inst) where T : UnityEngine.Object
     {
-        return inst.Current as T;
+        if (typeof(T) == typeof(GameObject))
+        {
+            return (inst.Current as GoPool).Spawn() as T;
+        }
+        else 
+            return inst.Current as T;
     }
 }

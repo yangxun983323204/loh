@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewEffect", menuName = "LOH/Effect")]
-public class Effect : ScriptableObject
+[CreateAssetMenu(fileName = "NewBuffData", menuName = "LOH/BuffData")]
+public class BuffData : ScriptableObject
 {
     public int Code;
     public string Icon;

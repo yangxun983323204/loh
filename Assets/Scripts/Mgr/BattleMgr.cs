@@ -9,8 +9,13 @@ public class BattleMgr : SingletonMono<BattleMgr>
     private List<Actor> _enemies = new List<Actor>(2);
     private Coroutine _turnHandler = null;
 
-    public IEnumerator BeginBattle(Actor[] players,Actor[] enemies)
+    public IEnumerator InitBattle(Actor[] players,Actor[] enemies)
     {
+        for (int i = 0; i < players.Length; i++)
+            yield return AssetsMgr.Instance.Prepare<GameObject>(players[i].RenderData.AssetId, 1);
+        for (int i = 0; i < enemies.Length; i++)
+            yield return AssetsMgr.Instance.Prepare<GameObject>(enemies[i].RenderData.AssetId, 1);
+
         for (int i = 0; i < players.Length; i++)
         {
             var player = players[i];
@@ -34,14 +39,12 @@ public class BattleMgr : SingletonMono<BattleMgr>
         var animList = new List<Actor>(players.Length + enemies.Length);
         animList.AddRange(players);
         animList.AddRange(enemies);
-        yield return animList.Select(actor => StartCoroutine(actor.Renderer.Appear())).GetEnumerator();
-        StopCoroutine("BeginTurn");
-        _turnHandler = StartCoroutine(BeginTurn());
+        yield return animList.SelcetParallel(actor => StartCoroutine(actor.Renderer.Appear())).GetEnumerator();
     }
 
     public IEnumerator EndBattle()
     {
-        StopCoroutine(_turnHandler);
+        EndTurnLoop();
         var actors = new List<Actor>(_players.Count + _enemies.Count);
         actors.AddRange(_players);
         actors.AddRange(_enemies);
@@ -56,7 +59,85 @@ public class BattleMgr : SingletonMono<BattleMgr>
         _enemies.Clear();
     }
 
-    private IEnumerator BeginTurn()
+    public int GetMateCount(Actor actor)
+    {
+        if (_players.Contains(actor))
+        {
+            return _players.Count - 1;
+        }
+        else if (_enemies.Contains(actor))
+        {
+            return _enemies.Count - 1;
+        }
+        return 0;
+    }
+
+    public int GetEnemyCount(Actor actor)
+    {
+        if (_players.Contains(actor))
+        {
+            return _enemies.Count;
+        }
+        else if (_enemies.Contains(actor))
+        {
+            return _players.Count;
+        }
+        return 0;
+    }
+    /// <summary>
+    /// 获取同伴
+    /// </summary>
+    public Actor GetMate(Actor actor,int idx)
+    {
+        if (_players.Contains(actor))
+        {
+            var a = _players[idx];
+            if (a == actor)
+                return _players[idx + 1];
+        }
+        else if (_enemies.Contains(actor))
+        {
+            var a = _enemies[idx];
+            if (a == actor)
+                return _enemies[idx + 1];
+        }
+
+        return null;
+    }
+    /// <summary>
+    /// 获取敌人
+    /// </summary>
+    public Actor GetEnemy(Actor actor,int idx)
+    {
+        if (_players.Contains(actor))
+        {
+            return _enemies[idx];
+        }
+        else if (_enemies.Contains(actor))
+        {
+            return _players[idx];
+        }
+
+        return null;
+    }
+
+    public void ForeachPlayer(System.Action<Actor> func)
+    {
+        foreach (var a in _players)
+        {
+            func?.Invoke(a);
+        }
+    }
+
+    public void ForeachEnemy(System.Action<Actor> func)
+    {
+        foreach (var a in _enemies)
+        {
+            func?.Invoke(a);
+        }
+    }
+
+    private IEnumerator BeginTurnLoopImpl()
     {
         int perMaxTime = 20;//
         var span = new WaitForSeconds(1);
@@ -71,21 +152,41 @@ public class BattleMgr : SingletonMono<BattleMgr>
                 var handler = p.Renderer.gameObject.GetComponent<TurnHandlerBase>();
                 if (handler!=null)
                 {
-                    var w = handler.Handle();
+                    handler.StartTurn();
                     var currTime = Time.realtimeSinceStartup;
-                    while (!w.isDone)
+                    while (!handler.IsDone)
                     {
                         yield return span;
                         if (Time.realtimeSinceStartup - currTime > perMaxTime)
                         {
-                            break;
+                            handler.ForceStop();
+                            goto tag_next;
                         }
                     }
                 }
+                tag_next:
                 yield return span;
             }
 
             Debug.Log("回合结束");
+        }
+    }
+
+    public void BeginTurnLoop()
+    {
+        if (_turnHandler==null)
+        {
+            _turnHandler = StartCoroutine(BeginTurnLoopImpl());
+        }
+    }
+
+    private void EndTurnLoop()
+    {
+        if (_turnHandler != null)
+        {
+            StopCoroutine(_turnHandler);
+            Debug.Log("回合中止");
+            _turnHandler = null;
         }
     }
 

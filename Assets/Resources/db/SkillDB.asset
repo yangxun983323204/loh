@@ -10,8 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 211f36cd8a649484180d8849ce76ae73, type: 3}
-  m_Name: ActorDB
+  m_Name: SkillDB
   m_EditorClassIdentifier: 
   Datas:
-  - {fileID: 11400000, guid: 397ad706b46092f4487c3c3b277f3f51, type: 2}
-  - {fileID: 11400000, guid: 511fe0f2b8f32164aa0e0f5e1a026a55, type: 2}
+  - {fileID: 11400000, guid: e26a73dd3ed959345bef5f79d7ffa9f5, type: 2}

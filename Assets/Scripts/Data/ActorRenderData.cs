@@ -9,23 +9,17 @@ public class ActorRenderData : ScriptableObject
 
     public string CenterPath = "center";
 
-    public string CreateAnim = "create";
-    public float CreateAnimTime = 0.5f;
+    public AnimInfo CreateAnim = new AnimInfo() { Name = "create", Time = 0.5f };
 
-    public string IdleAnim = "idle";
+    public AnimInfo IdleAnim = new AnimInfo() { Name = "idle", Time = -1 };
 
-    public string DamageAnim = "damage";
-    public float DamageAnimTime = 0.2f;
+    public AnimInfo DamageAnim = new AnimInfo() { Name = "damage", Time = 0.2f };
 
-    public string HitAnim = "hit";
-    public float HitAnimTime = 0.2f;
+    public AnimInfo HitAnim = new AnimInfo() { Name = "hit", Time = 0.2f };
 
-    public string DeathAnim = "death";
-    public float DeathAnimTime = 1f;
+    public AnimInfo DeathAnim = new AnimInfo() { Name = "death", Time = 1 };
 
-    public string SkillAnim1 = "skill1";
-    public float SkillAnim1Time = 1f;
+    public AnimInfo SkillAnim1 = new AnimInfo() { Name = "skill1", Time = 1 };
 
-    public string SkillAnim2 = "skill2";
-    public float SkillAnim2Time = 1f;
+    public AnimInfo SkillAnim2 = new AnimInfo() { Name = "skill2", Time = 1 };
 }

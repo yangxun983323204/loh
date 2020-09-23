@@ -24,4 +24,10 @@ public class ActorData : ScriptableObject
         MaxMp = Mathf.FloorToInt(MpGrowthA * MaxMp + MpGrowthB);
         CurrMp = MaxMp;
     }
+
+    public void AddHp(int val)
+    {
+        CurrHp += val;
+        CurrHp = Mathf.Clamp(CurrHp, 0, MaxHp);
+    }
 }

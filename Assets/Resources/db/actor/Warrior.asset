@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ef5ed942b3e0c41bffe9144ebc2fbb, type: 3}
   m_Name: Warrior
   m_EditorClassIdentifier: Game::Actor
+  Name: "\u6211\u65B9\u6218\u58EB"
   Data: {fileID: 11400000, guid: 953fccc9b6230704082172a4b9042101, type: 2}
   RenderData: {fileID: 11400000, guid: e125aaf040dec35498c5126672fe8f49, type: 2}

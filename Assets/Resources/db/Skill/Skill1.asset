@@ -9,9 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 211f36cd8a649484180d8849ce76ae73, type: 3}
-  m_Name: ActorDB
+  m_Script: {fileID: 11500000, guid: 00f0b857c362efa4aa09ab0cae77771c, type: 3}
+  m_Name: Skill1
   m_EditorClassIdentifier: 
-  Datas:
-  - {fileID: 11400000, guid: 397ad706b46092f4487c3c3b277f3f51, type: 2}
-  - {fileID: 11400000, guid: 511fe0f2b8f32164aa0e0f5e1a026a55, type: 2}
+  Id: 0
+  Name: "\u653B\u51FB"
+  Type: 1
+  AnimType: 0
+  Damage: 2
+  Heal: 0
+  Buffs: []
+  SpellAnim:
+    Name: 
+    Time: 1
+  HitAnim:
+    Name: 
+    Time: 1
+  HitApplyTime: 0.5

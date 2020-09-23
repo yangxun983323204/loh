@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdbd8b41bea0caa4d8fe3305e768ce4d, type: 3}
   m_Name: WarriorFlipRenderData
   m_EditorClassIdentifier: Game::ActorRenderData
-  AssetId: Actor/WarriorFlip
+  AssetId: Prefab/Actor/WarriorFlip
   CenterPath: center
   CreateAnim: create
   CreateAnimTime: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class EffectUI : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
+public class BuffListUI : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
 {
     public Image Icon;
     public Text Desc;
@@ -15,13 +15,13 @@ public class EffectUI : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
         Desc.text = null;
     }
 
-    public void SetData(Effect effect)
+    public void SetData(BuffData effect)
     {
         StopCoroutine("SetDataImpl");
         StartCoroutine(SetDataImpl(effect));
     }
 
-    private IEnumerator SetDataImpl(Effect effect)
+    private IEnumerator SetDataImpl(BuffData effect)
     {
         Desc.text = effect.Desc;
         var iter = AssetsMgr.Instance.Get<Sprite>(effect.Icon);

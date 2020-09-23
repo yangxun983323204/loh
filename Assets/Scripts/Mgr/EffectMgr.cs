@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EffectMgr : SingletonMono<EffectMgr>
+public class BuffMgr : SingletonMono<BuffMgr>
 {
-    private Dictionary<int, Effect> _effects;
+    private Dictionary<string, BuffData> _effects;
 
-    public void RegEffect(Effect effect)
+    public void RegBuff(BuffData effect)
     {
-        _effects.Add(effect.Code, effect);
+        _effects.Add(effect.name, effect);
     }
 
-    public void ApplyEffect(Actor actor,int code)
+    public void ApplyBuff(Actor actor,string key)
     {
-        var e = Instantiate(_effects[code]);
+        var e = Instantiate(_effects[key]);
         actor.Effects.Add(e);
     }
 
-    public void UpdateActorEffects(Actor actor)
+    public void UpdateActorBuff(Actor actor)
     {
         foreach (var e in actor.Effects)
         {

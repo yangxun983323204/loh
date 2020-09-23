@@ -8,7 +8,7 @@ public class ActorCanvas : MonoBehaviour
     public Slider Hp;
     public Text HpText;
     public RectTransform EffectsRoot;
-    public EffectUI EffectTemplate;
+    public BuffListUI EffectTemplate;
 
     public void SetHp(int curr,int max)
     {
@@ -16,7 +16,7 @@ public class ActorCanvas : MonoBehaviour
         HpText.text = string.Format("{0}/{1}", curr.ToString(), max.ToString());
     }
 
-    public void UpdateBuffList(List<Effect> effects)
+    public void UpdateBuffList(List<BuffData> effects)
     {
         var needCreate = effects.Count - (EffectsRoot.childCount - 1);
         if (needCreate < 0)
@@ -36,7 +36,7 @@ public class ActorCanvas : MonoBehaviour
 
         for (int i = 1; i < EffectsRoot.childCount; i++)
         {
-            EffectsRoot.GetChild(i).GetComponent<EffectUI>().SetData(effects[i + 1]);
+            EffectsRoot.GetChild(i).GetComponent<BuffListUI>().SetData(effects[i + 1]);
         }
     }
 }
