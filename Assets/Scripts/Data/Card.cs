@@ -5,7 +5,6 @@ using UnityEngine;
 public class Card
 {
     public int Id;
-    public string View;
 
     public override string ToString()
     {

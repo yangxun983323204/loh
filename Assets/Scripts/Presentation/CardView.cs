@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class CardView : MonoBehaviour
 {
-    public void Init(Card card)
+    public void Init(GameCard card)
     {
-        
+        // todo
+        var r = Resources.Load<GameObject>(card.View);
+        var go = Instantiate(r);
+        go.transform.SetParent(transform);
     }
 }
