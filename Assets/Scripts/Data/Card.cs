@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Card
 {
-    public int Id;
+    public int Id { get; set; }
 
     public override string ToString()
     {
