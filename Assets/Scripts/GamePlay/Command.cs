@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Action
+public class Command
 {
-    public enum ActionType
+    public enum CommandType
     {
         HpChange,
         MpChange,
@@ -57,18 +57,18 @@ public class Action
 
     public Actor Caller;
     public Actor Target;
-    public ActionType Type { get; private set;}
+    public CommandType Type { get; private set;}
 
     public Lazy<List<Arg>> Args { get; private set; }
 
-    public Action()
+    public Command()
     {
         Args = new Lazy<List<Arg>>(() => { return new List<Arg>(2); });
     }
 
     public void Init(int type,params string[] args)
     {
-        Type = (ActionType)type;
+        Type = (CommandType)type;
         if (args!=null)
         {
             for (int i = 0; i < args.Length; i++)
@@ -84,22 +84,22 @@ public class Action
     {
         switch (Type)
         {
-            case ActionType.HpChange:
+            case CommandType.HpChange:
                 Target.SetHp(Target.Hp + Args.Value[0].GetF());
                 break;
-            case ActionType.MpChange:
+            case CommandType.MpChange:
                 Target.SetMp(Target.Mp + Args.Value[0].GetF());
                 break;
-            case ActionType.ApChange:
+            case CommandType.ApChange:
                 Target.SetAp(Target.Ap + Args.Value[0].GetF());
                 break;
-            case ActionType.HpSet:
+            case CommandType.HpSet:
                 Target.SetHp(Args.Value[0].GetF());
                 break;
-            case ActionType.MpSet:
+            case CommandType.MpSet:
                 Target.SetMp(Args.Value[0].GetF());
                 break;
-            case ActionType.ApSet:
+            case CommandType.ApSet:
                 Target.SetAp(Args.Value[0].GetF());
                 break;
             default:

@@ -9,6 +9,7 @@ public class CardPlayer : MonoBehaviour
 
     public int DeckCount { get { return _deck.Count; }}
 
+    public ActionChain<CardPlayer, Card> onWillPlay;
     public event System.Action<Card> onTakeCard;
     public event System.Action onTakeCardFail;
     public event System.Action<Card> onPlayCard;
@@ -51,9 +52,12 @@ public class CardPlayer : MonoBehaviour
     {
         if (_hand.Contains(card))
         {
-            _hand.Remove(card);
-            _grave.Add(card);
-            onPlayCard?.Invoke(card);
+            if (onWillPlay.Invoke(this,card))
+            {
+                _hand.Remove(card);
+                _grave.Add(card);
+                onPlayCard?.Invoke(card);
+            }
         }
     }
 

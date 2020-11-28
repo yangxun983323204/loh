@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 using YX;
 
-public class SqliteDB : IGameCardDB,IDisposable
+public class SqliteDB : IGameCardDB, IActorDB, IDisposable
 {
     public const string RES_NAME = "gamedb";
 
@@ -40,7 +40,8 @@ public class SqliteDB : IGameCardDB,IDisposable
     {
         try
         {
-            _connection.CreateTable<GameCard>(CreateFlags.ImplicitPK|CreateFlags.AutoIncPK);
+            _connection.CreateTable<GameCard>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
+            _connection.CreateTable<ActorRecord>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
         }
         catch (Exception e)
         {
@@ -55,7 +56,7 @@ public class SqliteDB : IGameCardDB,IDisposable
 
     public static string GetOutPath()
     {
-        return Path.Combine(Application.persistentDataPath, "DB", RES_NAME+".db"); ;
+        return Path.Combine(Application.persistentDataPath, "DB", RES_NAME + ".db"); ;
     }
 
 
@@ -83,6 +84,17 @@ public class SqliteDB : IGameCardDB,IDisposable
     public List<GameCard> GetCardsWithCostMin(int cost, GameCard.CardType type)
     {
         return _connection.Table<GameCard>().Where(n => n.Type == type && n.Cost >= cost).ToList();
+    }
+    #endregion
+
+    #region IActorDB
+    public ActorRecord GetActor(int id)
+    {
+        return _connection.Table<ActorRecord>().Where(n => n.Id == id).First();
+    }
+    public List<ActorRecord> GetActorWithLv(int lv)
+    {
+        return _connection.Table<ActorRecord>().Where(n => n.Lv == lv).ToList();
     }
     #endregion
 

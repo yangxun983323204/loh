@@ -1091,7 +1091,7 @@ namespace SQLite4Unity3d
 		/// is rethrown.
 		/// </summary>
 		/// <param name="action">
-		/// The <see cref="Action"/> to perform within a transaction. <param name="action"> can contain any number
+		/// The <see cref="Command"/> to perform within a transaction. <param name="action"> can contain any number
 		/// of operations on the connection but should never call <see cref="BeginTransaction"/> or
 		/// <see cref="Commit"/>.
 		/// </param>
@@ -1113,7 +1113,7 @@ namespace SQLite4Unity3d
 		/// Executes <param name="action"> while blocking other threads to access the same database.
 		/// </summary>
 		/// <param name="action">
-		/// The <see cref="Action"/> to perform within a lock.
+		/// The <see cref="Command"/> to perform within a lock.
 		/// </param>
 		public void RunInDatabaseLock (System.Action action)
 		{
