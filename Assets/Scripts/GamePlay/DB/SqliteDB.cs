@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 using YX;
 
-public class SqliteDB : IGameCardDB, IActorDB, IDisposable
+public class SqliteDB : IGameCardDB, IActorDB,IActorDeckDB, IDisposable
 {
     public const string RES_NAME = "gamedb";
 
@@ -42,6 +42,7 @@ public class SqliteDB : IGameCardDB, IActorDB, IDisposable
         {
             _connection.CreateTable<GameCard>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
             _connection.CreateTable<ActorRecord>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
+            _connection.CreateTable<ActorDeckRecord>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
         }
         catch (Exception e)
         {
@@ -95,6 +96,26 @@ public class SqliteDB : IGameCardDB, IActorDB, IDisposable
     public List<ActorRecord> GetActorWithLv(int lv)
     {
         return _connection.Table<ActorRecord>().Where(n => n.Lv == lv).ToList();
+    }
+    #endregion
+
+    #region IActorDeckDB
+    public Deck GetDeck(int actorId)
+    {
+        var record = _connection.Table<ActorDeckRecord>().Where(n => n.ActorId == actorId).First();
+        if (record == null)
+            return null;
+
+        var deck = new Deck();
+        string[] ids = record.Cards.Split(',');
+        foreach (var str in ids)
+        {
+            var id = int.Parse(str);
+            var card = GetCard(id);
+            deck.Add(card);
+        }
+
+        return deck;
     }
     #endregion
 

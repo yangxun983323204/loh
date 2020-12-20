@@ -7,10 +7,11 @@ public class TestCardLoad : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        var gMgr = GameMgr.Create();
         var card = new GameCard();
         card.View = "Prefabs/Card/Test";
-        var go = new GameObject("Card");
-        var v = go.AddComponent<CardView>();
+        var obj = GameMgr.Instance.CardPool.Spawn();
+        var v = obj.GetComponent<CardView>();
         v.Init(card);
     }
 }

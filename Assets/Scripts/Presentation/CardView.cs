@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.IO;
 
 public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHandler
 {
+    public GameCard Data { get; private set; }
     public bool Draggable { get; set; } = true;
     public ActionChain<CardView> onEndDrag { get; private set; } = new ActionChain<CardView>();
 
@@ -13,11 +15,11 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
 
     public void Init(GameCard card)
     {
+        Data = card;
         // todo
-        var r = Resources.Load<Texture2D>(card.View);
-        var img = gameObject.AddComponent<RawImage>();
+        var r = Resources.Load<Texture2D>(Path.Combine("CardView",card.View));
+        var img = gameObject.GetComponentInChildren<RawImage>();
         img.texture = r;
-        (transform as RectTransform).sizeDelta = new Vector2(r.width, r.height);
     }
 
     public void ShowFront() { }

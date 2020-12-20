@@ -13,6 +13,8 @@ public class GameCard : Card
         Equip,
     }
 
+    public string Name { get; set; }
+    public string Desc { get; set; }
     public string View { get; set; }
     public CardType Type { get; set; }
     public int Cost { get; set; }

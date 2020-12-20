@@ -24,7 +24,7 @@ public class Command
 
         public void SetFormatValue(string val)
         {
-            var a = val.Split(':');
+            var a = val.Trim().Split(':');
             if (a[1] == "f")
             {
                 _f = float.Parse(a[0]);
@@ -66,9 +66,10 @@ public class Command
         Args = new Lazy<List<Arg>>(() => { return new List<Arg>(2); });
     }
 
-    public void Init(int type,params string[] args)
+    public void InitFromStr(string key,string content)
     {
-        Type = (CommandType)type;
+        Type = (CommandType)Enum.Parse(typeof(CommandType), key);
+        var args = content.Split('&');
         if (args!=null)
         {
             for (int i = 0; i < args.Length; i++)

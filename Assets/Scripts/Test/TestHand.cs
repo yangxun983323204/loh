@@ -30,7 +30,7 @@ public class TestHand : MonoBehaviour
     private GameObject CreateCard()
     {
         var card = new GameCard();
-        card.View = "CardView/test";
+        card.View = "test";
 
         var obj = new GameObject("Card");
         var view = obj.AddComponent<CardView>();

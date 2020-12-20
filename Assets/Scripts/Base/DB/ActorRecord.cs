@@ -5,6 +5,7 @@ using UnityEngine;
 public class ActorRecord
 {
     public int Id { get; set; }
+    public string Name { get; set; }
     public int Lv { get; set; }
     public int MaxHp { get; set; }
     public int MaxAp { get; set; }

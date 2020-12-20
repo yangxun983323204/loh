@@ -9,7 +9,7 @@ public class CardPlayer : MonoBehaviour
 
     public int DeckCount { get { return _deck.Count; }}
 
-    public ActionChain<CardPlayer, Card> onWillPlay;
+    public ActionChain<CardPlayer, Card> onWillPlay = new ActionChain<CardPlayer, Card>();
     public event System.Action<Card> onTakeCard;
     public event System.Action onTakeCardFail;
     public event System.Action<Card> onPlayCard;
