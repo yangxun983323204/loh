@@ -32,4 +32,46 @@ public class BattleMgr : MonoBehaviour
         Player.gameObject.GetComponent<CardPlayer>().Take(2);
         Enemy.gameObject.GetComponent<CardPlayer>().Take(2);
     }
+
+    public Actor GetSelf()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public Actor GetOpposite()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public CardView SpawnCardView(Actor actor,Card card)
+    {
+        var self = actor;
+        var hand = self.gameObject.GetComponent<HandLayout>();
+
+        var obj = GameMgr.Instance.CardPool.Spawn();
+        obj.SetActive(true);
+        var view = obj.GetComponentInChildren<CardView>();
+        view.Init(card as GameCard);
+        (obj.transform as RectTransform).sizeDelta = new Vector2(280, 390);
+        view.onEndDrag.Add(c => {
+            if (self.CanPlayCard(c.Data))
+            {
+                hand.Remove(c.gameObject);
+                self.Player.Play(c.Data);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        });
+        hand.Add(obj);
+        return view;
+    }
+
+    public void RecycleCardView(CardView view)
+    {
+        view.Clear();
+        GameMgr.Instance.CardPool.Recycle(view.gameObject);
+    }
 }

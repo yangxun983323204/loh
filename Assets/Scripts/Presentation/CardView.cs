@@ -54,4 +54,12 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
             transform.localPosition = Vector3.zero;
         }
     }
+
+    public void Clear()
+    {
+        Data = null;
+        onEndDrag.Clear();
+        var img = gameObject.GetComponentInChildren<RawImage>();
+        img.texture = null;
+    }
 }

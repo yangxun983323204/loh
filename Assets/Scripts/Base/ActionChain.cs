@@ -48,6 +48,11 @@ public class ActionChain<T>
 
         return true;
     }
+
+    public void Clear()
+    {
+        _chain.Clear();
+    }
 }
 
 public class ActionChain<T1,T2>
@@ -94,5 +99,10 @@ public class ActionChain<T1,T2>
         }
 
         return true;
+    }
+
+    public void Clear()
+    {
+        _chain.Clear();
     }
 }

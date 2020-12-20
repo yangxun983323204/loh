@@ -22,23 +22,6 @@ public class PlayerView : MonoBehaviour
 
     private void CreateCard(Card card)
     {
-        var obj = GameMgr.Instance.CardPool.Spawn();
-        obj.SetActive(true);
-        var view = obj.GetComponentInChildren<CardView>();
-        view.Init(card as GameCard);
-        _handView.Add(obj);
-        (obj.transform as RectTransform).sizeDelta = new Vector2(280, 390);
-        view.onEndDrag.Add(c => {
-            if (_actor.CanPlayCard(c.Data))
-            {
-                _handView.Remove(c.gameObject);
-                _player.Play(c.Data);
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        });
+        GameMgr.Instance.BattleMgr.SpawnCardView(_actor, card);
     }
 }

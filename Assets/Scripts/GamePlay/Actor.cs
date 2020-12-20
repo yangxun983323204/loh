@@ -20,12 +20,12 @@ public class Actor:MonoBehaviour
     public List<Buff> Buffs { get; set; }
     public ActionChain<Command> onActionExecute { get; private set; } = new ActionChain<Command>();
 
-    private CardPlayer _player;
+    public CardPlayer Player { get; private set; }
 
     private void Awake()
     {
-        _player = gameObject.GetComponent<CardPlayer>();
-        _player.onWillPlay.Add(PlayCheck);
+        Player = gameObject.GetComponent<CardPlayer>();
+        Player.onWillPlay.Add(PlayCheck);
     }
 
     public void SetData(ActorRecord record)
