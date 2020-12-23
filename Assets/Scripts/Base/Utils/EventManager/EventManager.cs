@@ -64,9 +64,12 @@ namespace YX
             var listeners = _evtListenerMap.Get(evt.GetEventType(), null);
             if (listeners!=null)
             {
-                foreach (var listener in listeners)
+                var node = listeners.First;
+                while (node!=null)
                 {
-                    listener.Invoke(evt);
+                    var t = node;
+                    node = node.Next;
+                    t.Value.Invoke(evt);
                     processed = true;
                 }
             }

@@ -22,6 +22,26 @@ public abstract class Evt_Base : EventDataBase
     }
 }
 
+public class Evt_StartGame : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+}
+
+public class Evt_Quit : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+}
+
 public class Evt_TryTakeCard:Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
