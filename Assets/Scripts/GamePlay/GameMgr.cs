@@ -5,6 +5,14 @@ using YX;
 
 public class GameMgr : MonoBehaviour
 {
+    enum GameState
+    {
+        MainMenu,
+        SelectActor,
+        LoadLevel,
+        Running,
+    }
+
     private static GameMgr _inst;
     public static GameMgr Instance { get; private set; }
 
@@ -64,5 +72,10 @@ public class GameMgr : MonoBehaviour
     {
         Instance = null;
         _db.Release();
+    }
+
+    void Update()
+    {
+        
     }
 }
