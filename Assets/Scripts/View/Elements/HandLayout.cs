@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using YX;
 
@@ -13,10 +14,12 @@ public class HandLayout : MonoBehaviour
     private float _perWidth = 0;
     private int _maxWidth = 500;
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         _pool = new Pool<GameObject>();
-        _pool.SetTemplate(Instantiate(Template), new GameObjectAllocator());
+        var allocator = new GameObjectAllocator();
+        GameMgr.Instance.LevelLoader.MoveGameObjectToScene(allocator.CacheRoot);
+        _pool.SetTemplate(Instantiate(Template), allocator);
     }
 
     public void SetRect(int cardWidth,int maxWidth)

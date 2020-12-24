@@ -31,7 +31,6 @@ public class GameMgr : MonoBehaviour
 
     private SqliteDB _db;
 
-    [RuntimeInitializeOnLoadMethod]
     public static GameMgr Create()
     {
         if (Instance != null)

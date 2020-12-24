@@ -32,6 +32,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
             return;
 
         _dragOffset = transform.position - (Vector3)eventData.pointerCurrentRaycast.screenPosition;
+        _dragOffset.z = 100;
     }
 
     public void OnDrag(PointerEventData eventData)

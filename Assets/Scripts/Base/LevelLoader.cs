@@ -5,6 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
+    private string _currScene = "Splash";
+
+    public void MoveGameObjectToScene(GameObject obj)
+    {
+        SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName(_currScene));
+    }
+
     public void FadeTo(string name,System.Action<string> callback = null)
     {
         StartCoroutine(FadeToImpl(name,callback));
@@ -12,10 +19,42 @@ public class LevelLoader : MonoBehaviour
 
     private IEnumerator FadeToImpl(string name, System.Action<string> callback)
     {
-        SceneManager.LoadScene("Fade");
-        var iter = SceneManager.LoadSceneAsync(name);
-        yield return iter;
-        yield return null;
+        var t0 = Time.time;
+        SceneManager.LoadScene("Fade",LoadSceneMode.Additive);
+        yield return new WaitForSeconds(1f);
+        DisableScene(_currScene);
+        yield return SceneManager.UnloadSceneAsync(_currScene);
+        yield return WaitFrame(3);
+        yield return SceneManager.LoadSceneAsync(name,LoadSceneMode.Additive);
+        _currScene = name;
+        yield return WaitFrame(3);
+        yield return SceneManager.UnloadSceneAsync("Fade", UnloadSceneOptions.None);
+        yield return WaitFrame(30);
+        var wait = 2 - (Time.time - t0);
+        if (wait>0)
+        {
+            yield return new WaitForSeconds(wait);
+        }
+        
         callback?.Invoke(name);
+    }
+
+    private IEnumerator WaitFrame(int cnt)
+    {
+        var frame = new WaitForEndOfFrame();
+        for (int i = 0; i < cnt; i++)
+        {
+            yield return frame;
+        }
+    }
+
+    private void DisableScene(string name)
+    {
+        var sc = SceneManager.GetSceneByName(name);
+        var roots = sc.GetRootGameObjects();
+        foreach (var go in roots)
+        {
+            go.SetActive(false);
+        }
     }
 }
