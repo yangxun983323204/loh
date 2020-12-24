@@ -1,19 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YX;
 
-public class CardPlayer : MonoBehaviour
+public class CardPlay
 {
+    public Actor Owner { get; set; }
     public int HandCount { get { return _hand.Count; }}
     public int HandCapacity { get { return _hand.Capacity; } set { _hand.Capacity = value; } }
-
     public int DeckCount { get { return _deck.Count; }}
-
-    public ActionChain<CardPlayer, Card> onWillPlay = new ActionChain<CardPlayer, Card>();
-    public event System.Action<Card> onTakeCard;
-    public event System.Action onTakeCardFail;
-    public event System.Action<Card> onPlayCard;
-    public event System.Action<Card> onDiscardCard;
 
     private Deck _deckOrigin;
     private Deck _deck;
@@ -39,11 +34,11 @@ public class CardPlayer : MonoBehaviour
             if (card!=null)
             {
                 _hand.Add(card);
-                onTakeCard?.Invoke(card);
+                EventManager.Instance.QueueEvent(new Evt_TakedCard() { Owner = Owner, Card = card as GameCard });
             }
             else
             {
-                onTakeCardFail?.Invoke();
+                EventManager.Instance.QueueEvent(new Evt_TakeCardFailed() { Owner = Owner});
             }
         }
     }
@@ -52,12 +47,9 @@ public class CardPlayer : MonoBehaviour
     {
         if (_hand.Contains(card))
         {
-            if (onWillPlay.Invoke(this,card))
-            {
-                _hand.Remove(card);
-                _grave.Add(card);
-                onPlayCard?.Invoke(card);
-            }
+            _hand.Remove(card);
+            _grave.Add(card);
+            EventManager.Instance.QueueEvent(new Evt_PlayedCard() { Owner = Owner, Card = card as GameCard });
         }
     }
 
@@ -73,7 +65,7 @@ public class CardPlayer : MonoBehaviour
             Debug.Assert(card != null);
             _hand.Remove(card);
             _grave.Add(card);
-            onDiscardCard?.Invoke(card);
+            EventManager.Instance.QueueEvent(new Evt_DiscardCard() { Owner = Owner, Card = card as GameCard });
         }
     }
 

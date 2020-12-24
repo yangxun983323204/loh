@@ -28,6 +28,7 @@ public class LevelLoader : MonoBehaviour
         yield return SceneManager.LoadSceneAsync(name,LoadSceneMode.Additive);
         _currScene = name;
         yield return WaitFrame(3);
+        MoveDynamicObjects();
         yield return SceneManager.UnloadSceneAsync("Fade", UnloadSceneOptions.None);
         yield return WaitFrame(30);
         var wait = 2 - (Time.time - t0);
@@ -55,6 +56,21 @@ public class LevelLoader : MonoBehaviour
         foreach (var go in roots)
         {
             go.SetActive(false);
+        }
+    }
+
+    private void MoveDynamicObjects()
+    {
+        var sc = SceneManager.GetSceneByName("Fade");
+        var roots = sc.GetRootGameObjects();
+        var targetSc = SceneManager.GetSceneByName(_currScene);
+        
+        foreach (var go in roots)
+        {
+            if (go.name!="YxFade")
+            {
+                SceneManager.MoveGameObjectToScene(go, targetSc);
+            }
         }
     }
 }

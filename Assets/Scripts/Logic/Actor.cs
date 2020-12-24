@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Actor:MonoBehaviour
+public class Actor
 {
     public int Id { get;private set; }
     public int Lv { get;private set; }
@@ -20,12 +20,12 @@ public class Actor:MonoBehaviour
     public List<Buff> Buffs { get; set; }
     public ActionChain<Command> onActionExecute { get; private set; } = new ActionChain<Command>();
 
-    public CardPlayer Player { get; private set; }
+    public CardPlay Play { get; private set; }
 
-    private void Awake()
+    public Actor()
     {
-        Player = gameObject.GetComponent<CardPlayer>();
-        Player.onWillPlay.Add(PlayCheck);
+        Play = new CardPlay();
+        Play.Owner = this;
     }
 
     public void SetData(ActorRecord record)
@@ -71,7 +71,7 @@ public class Actor:MonoBehaviour
 
     public void SetMp(float val) { }
 
-    public bool PlayCheck(CardPlayer player, Card card)
+    public bool PlayCheck(CardPlay player, Card card)
     {
         return true;
     }

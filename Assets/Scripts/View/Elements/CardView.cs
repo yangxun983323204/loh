@@ -11,7 +11,16 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
     public bool Draggable { get; set; } = true;
     public ActionChain<CardView> onEndDrag { get; private set; } = new ActionChain<CardView>();
 
+    private RectTransform _canvasRect;
     private Vector3 _dragOffset = Vector2.zero;
+    private Canvas _selfCanvas;
+
+    void Start()
+    {
+        _canvasRect = GetComponentInParent<Canvas>().transform as RectTransform;
+        _selfCanvas = gameObject.GetComponent<Canvas>();
+        _selfCanvas.overrideSorting = false;
+    }
 
     public void Init(GameCard card)
     {
@@ -31,8 +40,11 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         if (!Draggable)
             return;
 
-        _dragOffset = transform.position - (Vector3)eventData.pointerCurrentRaycast.screenPosition;
-        _dragOffset.z = 100;
+        Vector3 wpos;
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(_canvasRect,(Vector3)eventData.pointerCurrentRaycast.screenPosition,Camera.main,out wpos);
+        _dragOffset = transform.position - wpos;
+        _selfCanvas.overrideSorting = true;
+        _selfCanvas.sortingOrder = 10;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -40,7 +52,9 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         if (!Draggable)
             return;
 
-        transform.position = (Vector3)eventData.pointerCurrentRaycast.screenPosition + _dragOffset;
+        Vector3 wpos;
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(_canvasRect, (Vector3)eventData.pointerCurrentRaycast.screenPosition, Camera.main, out wpos);
+        transform.position = wpos + _dragOffset;
         transform.localScale = Vector3.one * 1.5f;
     }
 
@@ -49,6 +63,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         if (!Draggable)
             return;
 
+        _selfCanvas.overrideSorting = false;
         transform.localScale = Vector3.one;
         if (onEndDrag.Invoke(this))
         {

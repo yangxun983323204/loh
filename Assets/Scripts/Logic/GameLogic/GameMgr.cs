@@ -25,7 +25,6 @@ public class GameMgr : MonoBehaviour
     public IGameCardDB CardDB { get { return _db; } }
     public IActorDB ActorDB { get { return _db; } }
     public IActorDeckDB DeckDB { get { return _db; } }
-    public BattleMgr BattleMgr { get; private set; }
     public Pool<GameObject> CardPool { get; private set; }
     public LevelLoader LevelLoader { get; private set; }
 
@@ -68,7 +67,6 @@ public class GameMgr : MonoBehaviour
     {
         new YX.EventManager();
         _db = new SqliteDB();
-        BattleMgr = gameObject.AddComponent<BattleMgr>();
         CardPool = new Pool<GameObject>();
         var tmp = Instantiate(Resources.Load<GameObject>("CardView/TCard"));
         var allocator = new GameObjectAllocator();

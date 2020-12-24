@@ -42,10 +42,12 @@ public class Evt_Quit : Evt_Base
     }
 }
 
-public class Evt_TryTakeCard:Evt_Base
+public class Evt_InitBattle : Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
-    public int Count { get; set; }
+
+    public Actor Player { get; set; }
+    public Actor Enemy { get; set; }
 
     public override ulong GetEventType()
     {
@@ -56,7 +58,19 @@ public class Evt_TryTakeCard:Evt_Base
 public class Evt_TakedCard:Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
+    public Actor Owner { get; set; }
     public GameCard Card { get; set; }
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+}
+
+public class Evt_TakeCardFailed : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+    public Actor Owner { get; set; }
 
     public override ulong GetEventType()
     {
@@ -78,6 +92,19 @@ public class Evt_TryPlayCard:Evt_Base
 public class Evt_PlayedCard:Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
+    public Actor Owner { get; set; }
+    public GameCard Card { get; set; }
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+}
+
+public class Evt_DiscardCard : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+    public Actor Owner { get; set; }
     public GameCard Card { get; set; }
 
     public override ulong GetEventType()

@@ -133,42 +133,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 985058855}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &288882611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 288882609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31c9c4a9c9a89824ab8e63edb6fd481e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &288882612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 288882609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7dddf813b3549146b1da2eadce81bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &288882615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 288882609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae5c648d73fe4e4a9856adab41b05e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &318482651
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,6 +336,7 @@ GameObject:
   - component: {fileID: 787961786}
   - component: {fileID: 787961785}
   - component: {fileID: 787961784}
+  - component: {fileID: 787961788}
   m_Layer: 5
   m_Name: Canvas-Battle
   m_TagString: Untagged
@@ -427,8 +392,8 @@ Canvas:
   m_GameObject: {fileID: 787961783}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1429227633}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -460,6 +425,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &787961788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787961783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ae5c648d73fe4e4a9856adab41b05e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerObj: {fileID: 288882609}
+  EnemyObj: {fileID: 1879442966}
 --- !u!1001 &985058855
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -470,11 +449,6 @@ PrefabInstance:
     - target: {fileID: 1497208628474097633, guid: eef33f32274633146a3d0fd65f55d8cc,
         type: 3}
       propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 1497208628474097633, guid: eef33f32274633146a3d0fd65f55d8cc,
-        type: 3}
-      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6637099012737568234, guid: eef33f32274633146a3d0fd65f55d8cc,
@@ -768,9 +742,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1879442967}
-  - component: {fileID: 1879442969}
-  - component: {fileID: 1879442968}
-  - component: {fileID: 1879442970}
   m_Layer: 5
   m_Name: Enemy
   m_TagString: Enemy
@@ -798,39 +769,3 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 147}
   m_SizeDelta: {x: 500, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1879442968
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1879442966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31c9c4a9c9a89824ab8e63edb6fd481e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1879442969
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1879442966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59b68211b6c048345a3a9ee4876f6c8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1879442970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1879442966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7dddf813b3549146b1da2eadce81bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YX;
 
 public class BattleState : GameMgr.GameState
 {
@@ -22,7 +23,6 @@ public class BattleState : GameMgr.GameState
         if (name == "Battle")
         {
             var gMgr = GameMgr.Create();
-            var btMgr = gMgr.BattleMgr;
             var player = gMgr.ActorDB.GetActor(1);
             var deck1 = gMgr.DeckDB.GetDeck(1);
             var enemy = gMgr.ActorDB.GetActor(2);
@@ -34,19 +34,22 @@ public class BattleState : GameMgr.GameState
     private IEnumerator InitScene(ActorRecord playerRec, Deck playerDeck, ActorRecord enemyRec, Deck enemyDeck)
     {
         yield return null;
-        yield return null;
-        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Actor>();
-        Enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Actor>();
+        Player = new Actor();
+        Enemy = new Actor();
 
         Player.SetData(playerRec);
-        Player.gameObject.GetComponent<CardPlayer>().Init(playerDeck);
-        Player.gameObject.GetComponent<PlayerView>().Init(Player);
+        Player.Play.Init(playerDeck);
 
         Enemy.SetData(enemyRec);
-        Enemy.gameObject.GetComponent<CardPlayer>().Init(enemyDeck);
-        Enemy.gameObject.GetComponent<EnemyView>().Init(Enemy);
+        Enemy.Play.Init(enemyDeck);
 
-        Player.gameObject.GetComponent<CardPlayer>().Take(2);
-        Enemy.gameObject.GetComponent<CardPlayer>().Take(2);
+        EventManager.Instance.QueueEvent(new Evt_InitBattle()
+        {
+            Player = Player,
+            Enemy = Enemy
+        });
+
+        Player.Play.Take(5);
+        Enemy.Play.Take(2);
     }
 }

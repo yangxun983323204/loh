@@ -18,7 +18,6 @@ public class HandLayout : MonoBehaviour
     {
         _pool = new Pool<GameObject>();
         var allocator = new GameObjectAllocator();
-        GameMgr.Instance.LevelLoader.MoveGameObjectToScene(allocator.CacheRoot);
         _pool.SetTemplate(Instantiate(Template), allocator);
     }
 
@@ -42,8 +41,12 @@ public class HandLayout : MonoBehaviour
     {
         var item = _pool.Spawn();
         item.transform.SetParent(transform);
+        item.transform.localPosition = Vector3.zero;
+        item.transform.localScale = Vector3.one;
         item.transform.SetAsLastSibling();
         go.transform.SetParent(item.transform);
+        go.transform.localPosition = Vector3.zero;
+        go.transform.localScale = Vector3.one;
         Scale();
     }
 
