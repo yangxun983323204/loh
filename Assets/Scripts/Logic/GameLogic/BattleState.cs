@@ -16,6 +16,31 @@ public class BattleState : GameMgr.GameState
     public override void OnEnter()
     {
         GameMgr.Instance.LevelLoader.FadeTo("Battle",OnLoadScene);
+        Bind();
+    }
+
+    public override void OnExit()
+    {
+        Unbind();
+    }
+
+    public Actor GetAnother(Actor actor)
+    {
+        if (actor == Player)
+            return Enemy;
+        else if (actor == Enemy)
+            return Player;
+        else
+            throw new System.NotSupportedException("非战斗对象");
+    }
+
+    void Bind()
+    {
+        EventManager.Instance.AddListener(Evt_TryPlayCard.EvtType, OnTryPlayCard);
+    }
+    void Unbind()
+    {
+        EventManager.Instance.RemoveListener(Evt_TryPlayCard.EvtType, OnTryPlayCard);
     }
 
     private void OnLoadScene(string name)
@@ -51,5 +76,24 @@ public class BattleState : GameMgr.GameState
 
         Player.Play.Take(5);
         Enemy.Play.Take(2);
+    }
+
+    void OnTryPlayCard(EventDataBase evt)
+    {
+        var evtTryPlay = evt as Evt_TryPlayCard;
+        var owner = evtTryPlay.Owner;
+        var target = evtTryPlay.Target;
+        var card = evtTryPlay.Card;
+        if (owner.Play.Play(card))
+        {
+            var cmds = Command.Load(card.CommandsJson);
+            if (cmds == null) return;
+            foreach (var c in cmds)
+            {
+                c.Caller = owner;
+                c.Target = target;
+                c.Execute();
+            }
+        }
     }
 }

@@ -43,14 +43,17 @@ public class CardPlay
         }
     }
 
-    public void Play(Card card)
+    public bool Play(Card card)
     {
         if (_hand.Contains(card))
         {
             _hand.Remove(card);
             _grave.Add(card);
             EventManager.Instance.QueueEvent(new Evt_PlayedCard() { Owner = Owner, Card = card as GameCard });
+            return true;
         }
+
+        return false;
     }
 
     public void DiscardRight(int cnt)
@@ -72,5 +75,10 @@ public class CardPlay
     public Card HandLeft(int idx)
     {
         return _hand.Left(idx);
+    }
+
+    public int HandIdx(Card card)
+    {
+        return _hand.IndexOf(card);
     }
 }

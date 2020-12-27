@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.IO;
+using YX;
 
 public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHandler
 {
-    public GameCard Data { get; private set; }
+    public Actor Owner { get; set; }
+    public GameCard Data { get; set; }
     public bool Draggable { get; set; } = true;
-    public ActionChain<CardView> onEndDrag { get; private set; } = new ActionChain<CardView>();
 
     private RectTransform _canvasRect;
     private Vector3 _dragOffset = Vector2.zero;
@@ -19,7 +20,6 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
     {
         _canvasRect = GetComponentInParent<Canvas>().transform as RectTransform;
         _selfCanvas = gameObject.GetComponent<Canvas>();
-        _selfCanvas.overrideSorting = false;
     }
 
     public void Init(GameCard card)
@@ -30,10 +30,6 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         var img = gameObject.GetComponentInChildren<RawImage>();
         img.texture = r;
     }
-
-    public void ShowFront() { }
-
-    public void ShowBack() { }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -65,17 +61,11 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
 
         _selfCanvas.overrideSorting = false;
         transform.localScale = Vector3.one;
-        if (onEndDrag.Invoke(this))
-        {
-            transform.localPosition = Vector3.zero;
-        }
-    }
-
-    public void Clear()
-    {
-        Data = null;
-        onEndDrag.Clear();
-        var img = gameObject.GetComponentInChildren<RawImage>();
-        img.texture = null;
+        EventManager.Instance.TriggerEvent(
+            new Evt_TryPlayCard() {
+                Owner = Owner,
+                Target = GameMgr.Instance.Battle.GetAnother(Owner),
+                Card = Data
+            });
     }
 }

@@ -74,7 +74,7 @@ public class HandLayout : MonoBehaviour
         return go.transform.parent.GetSiblingIndex();
     }
 
-    private GameObject Item(int idx)
+    public GameObject Item(int idx)
     {
         if (idx < 0 || idx >= transform.childCount)
             return null;

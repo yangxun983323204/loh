@@ -110,6 +110,11 @@ public abstract class CardSet
         return _cardStack.Contains(card);
     }
 
+    public int IndexOf(Card card)
+    {
+        return _cardStack.IndexOf(card);
+    }
+
     public void Clear()
     {
         _cardStack.Clear();

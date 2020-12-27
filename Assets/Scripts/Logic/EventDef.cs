@@ -81,6 +81,8 @@ public class Evt_TakeCardFailed : Evt_Base
 public class Evt_TryPlayCard:Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
+    public Actor Owner { get; set; }
+    public Actor Target { get; set; }
     public GameCard Card { get; set; }
 
     public override ulong GetEventType()
@@ -118,12 +120,6 @@ public class Evt_ActorPropsChange:Evt_Base
     public static readonly ulong EvtType = MakeGuid();
 
     public Actor Target { get; set; }
-    public int Hp { get; set; }
-    public int Mp { get; set; }
-    public int Ap { get; set; }
-    public int MaxHp { get; set; }
-    public int MaxMp { get; set; }
-    public int MaxAp { get; set; }
 
     public override ulong GetEventType()
     {
@@ -131,10 +127,25 @@ public class Evt_ActorPropsChange:Evt_Base
     }
 }
 
+public class Evt_CmdExec : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+
+    public Actor Target { get; set; }
+    public Command Cmd { get; set; }
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+}
+
+
 public class Evt_AddBuff : Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
 
+    public Actor Target { get; set; }
     public Buff Data { get; set; }
 
     public override ulong GetEventType()

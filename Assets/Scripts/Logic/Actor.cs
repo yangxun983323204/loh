@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using YX;
 
 public class Actor
 {
@@ -65,11 +66,26 @@ public class Actor
         return canPlay;
     }
 
-    public void SetHp(float val) { }
+    public void SetHp(float val)
+    {
+        Hp = (int)val;
+        EventManager.Instance.QueueEvent(
+            new Evt_ActorPropsChange() { Target = this });
+    }
 
-    public void SetAp(float val) { }
+    public void SetAp(float val)
+    {
+        Ap = (int)val;
+        EventManager.Instance.QueueEvent(
+            new Evt_ActorPropsChange() { Target = this });
+    }
 
-    public void SetMp(float val) { }
+    public void SetMp(float val)
+    {
+        Mp = (int)val;
+        EventManager.Instance.QueueEvent(
+            new Evt_ActorPropsChange() { Target = this });
+    }
 
     public bool PlayCheck(CardPlay player, Card card)
     {

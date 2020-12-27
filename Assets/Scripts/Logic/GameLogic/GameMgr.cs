@@ -17,8 +17,8 @@ public class GameMgr : MonoBehaviour
     public static GameMgr Instance { get; private set; }
 
 
-    public GameState MainMenu { get; private set; }
-    public GameState Battle { get; private set; }
+    public MainMenuState MainMenu { get; private set; }
+    public BattleState Battle { get; private set; }
 
     public GameState CurrState { get; set; }
 

@@ -2,11 +2,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+using YX;
 
 public class Command
 {
     public enum CommandType
     {
+        None,
+
+        Weapon,
+
+        Fire,
+        Ice,
+        Light,
+        Gas,
+
+        Divinity,
+        Dark,
+    }
+
+    public enum CommandKey
+    {
+        None,
+
         HpChange,
         MpChange,
         ApChange,
@@ -16,95 +35,90 @@ public class Command
         ApSet,
     }
 
-    public class Arg
-    {
-        float _f;
-        string _s;
-        ushort _type;
-
-        public void SetFormatValue(string val)
-        {
-            var a = val.Trim().Split(':');
-            if (a[1] == "f")
-            {
-                _f = float.Parse(a[0]);
-                _s = null;
-                _type = 1;
-            }
-            else if (a[1] == "s")
-            {
-                _s = a[0];
-                _type = 2;
-            }
-        }
-
-        public float GetF()
-        {
-            if (_type != 1)
-                throw new System.InvalidCastException();
-
-            return _f;
-        }
-
-        public string GetS()
-        {
-            if (_type != 2)
-                throw new System.InvalidCastException();
-
-            return _s;
-        }
-    }
-
     public Actor Caller;
     public Actor Target;
-    public CommandType Type { get; private set;}
 
-    public Lazy<List<Arg>> Args { get; private set; }
+    public string Key;
+    public string Type;
+    public float NumArg;
+    public string StrArg;
 
-    public Command()
+    private CommandKey? _key;
+    private CommandType? _type;
+
+    public CommandKey GetCmdKey()
     {
-        Args = new Lazy<List<Arg>>(() => { return new List<Arg>(2); });
-    }
-
-    public void InitFromStr(string key,string content)
-    {
-        Type = (CommandType)Enum.Parse(typeof(CommandType), key);
-        var args = content.Split('&');
-        if (args!=null)
+        if (!_key.HasValue)
         {
-            for (int i = 0; i < args.Length; i++)
+            try
             {
-                var arg = new Arg();
-                arg.SetFormatValue(args[i]);
-                Args.Value.Add(arg);
+                _key = (CommandKey)Enum.Parse(typeof(CommandKey), Key);
+            }
+            catch (Exception)
+            {
+                Debug.LogError("解析CommandKey失败");
+                _key = CommandKey.None;
             }
         }
+
+        return _key.Value;
+    }
+
+    public CommandType GetCmdType()
+    {
+        if (!_type.HasValue)
+        {
+            try
+            {
+                _type = (CommandType)Enum.Parse(typeof(CommandType), Type);
+            }
+            catch (Exception)
+            {
+                Debug.LogWarning("解析CommandType失败");
+                _type = CommandType.None;
+            }
+        }
+
+        return _type.Value;
     }
 
     public void Execute()
     {
-        switch (Type)
+        if (GetCmdKey() == CommandKey.None)
+            return;
+
+        EventManager.Instance.QueueEvent(new Evt_CmdExec() {
+            Target = Target,
+            Cmd = this
+        });
+
+        switch (GetCmdKey())
         {
-            case CommandType.HpChange:
-                Target.SetHp(Target.Hp + Args.Value[0].GetF());
+            case CommandKey.HpChange:
+                Target.SetHp(Target.Hp + NumArg);
                 break;
-            case CommandType.MpChange:
-                Target.SetMp(Target.Mp + Args.Value[0].GetF());
+            case CommandKey.MpChange:
+                Target.SetMp(Target.Mp + NumArg);
                 break;
-            case CommandType.ApChange:
-                Target.SetAp(Target.Ap + Args.Value[0].GetF());
+            case CommandKey.ApChange:
+                Target.SetAp(Target.Ap + NumArg);
                 break;
-            case CommandType.HpSet:
-                Target.SetHp(Args.Value[0].GetF());
+            case CommandKey.HpSet:
+                Target.SetHp(NumArg);
                 break;
-            case CommandType.MpSet:
-                Target.SetMp(Args.Value[0].GetF());
+            case CommandKey.MpSet:
+                Target.SetMp(NumArg);
                 break;
-            case CommandType.ApSet:
-                Target.SetAp(Args.Value[0].GetF());
+            case CommandKey.ApSet:
+                Target.SetAp(NumArg);
                 break;
             default:
                 break;
         }
+    }
+
+    public static Command[] Load(string json)
+    {
+        return JsonConvert.DeserializeObject<Command[]>(json);
     }
 }
