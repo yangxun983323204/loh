@@ -12,7 +12,6 @@ public abstract class CardSet
 
     public void Add(Card card)
     {
-        Debug.Assert(!_cardStack.Contains(card));
         _cardStack.Add(card);
     }
 

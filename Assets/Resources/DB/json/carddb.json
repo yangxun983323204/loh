@@ -1,0 +1,11 @@
+[
+{
+    "Name":"测试卡1",
+    "Desc":"没错我是测试卡1",
+    "View":"test",
+    "Type":0,
+    "Cost":1,
+    "CommandsJson":"[{\"Key\":\"HpChange\",\"NumArg\":-2}]",
+    "Id":1
+}
+]

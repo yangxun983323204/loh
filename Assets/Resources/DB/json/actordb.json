@@ -1,0 +1,26 @@
+[
+{
+    "Id":1,
+    "Name":"axun",
+    "Lv":999,
+    "MaxHp":1000,
+    "MaxAp":1000,
+    "MaxMp":1000,
+    "Hp":1000,
+    "Ap":1000,
+    "Mp":1000,
+    "View":"axun"
+},
+{
+    "Id":2,
+    "Name":"草人",
+    "Lv":1,
+    "MaxHp":10,
+    "MaxAp":1,
+    "MaxMp":5,
+    "Hp":10,
+    "Ap":1,
+    "Mp":5,
+    "View":"straw"
+}
+]

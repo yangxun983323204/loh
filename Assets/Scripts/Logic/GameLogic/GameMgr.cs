@@ -28,7 +28,7 @@ public class GameMgr : MonoBehaviour
     public Pool<GameObject> CardPool { get; private set; }
     public LevelLoader LevelLoader { get; private set; }
 
-    private SqliteDB _db;
+    private JsonDB _db;
 
     public static GameMgr Create()
     {
@@ -66,7 +66,7 @@ public class GameMgr : MonoBehaviour
     public void Setup()
     {
         new YX.EventManager();
-        _db = new SqliteDB();
+        _db = new JsonDB();
         CardPool = new Pool<GameObject>();
         var tmp = Instantiate(Resources.Load<GameObject>("CardView/TCard"));
         var allocator = new GameObjectAllocator();
@@ -76,8 +76,6 @@ public class GameMgr : MonoBehaviour
         //
         MainMenu = new MainMenuState();
         Battle = new BattleState();
-        //
-        EnterState(MainMenu);
     }
 
     public void Shutdown()
@@ -99,6 +97,7 @@ public class GameMgr : MonoBehaviour
     void Update()
     {
         EventManager.Instance.Update(200);
-        CurrState.OnUpdate();
+        if(CurrState!=null)
+            CurrState.OnUpdate();
     }
 }
