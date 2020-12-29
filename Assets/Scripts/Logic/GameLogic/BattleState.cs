@@ -34,6 +34,11 @@ public class BattleState : GameMgr.GameState
             throw new System.NotSupportedException("非战斗对象");
     }
 
+    public bool CanPlay(Actor actor,GameCard card)
+    {
+        return actor.CanPlayCard(card);
+    }
+
     void Bind()
     {
         EventManager.Instance.AddListener(Evt_TryPlayCard.EvtType, OnTryPlayCard);

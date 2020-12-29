@@ -20,6 +20,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
     {
         _canvasRect = GetComponentInParent<Canvas>().transform as RectTransform;
         _selfCanvas = gameObject.GetComponent<Canvas>();
+        _selfCanvas.overrideSorting = false;
     }
 
     public void Init(GameCard card)
@@ -29,6 +30,9 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         var r = Resources.Load<Texture2D>(Path.Combine("CardView",card.View));
         var img = gameObject.GetComponentInChildren<RawImage>();
         img.texture = r;
+
+        var desc = gameObject.GetComponentInChildren<Text>();
+        desc.text = card.Desc;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -51,7 +55,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         Vector3 wpos;
         RectTransformUtility.ScreenPointToWorldPointInRectangle(_canvasRect, (Vector3)eventData.pointerCurrentRaycast.screenPosition, Camera.main, out wpos);
         transform.position = wpos + _dragOffset;
-        transform.localScale = Vector3.one * 1.5f;
+        transform.localScale = Vector3.one * 2f;
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -61,11 +65,25 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
 
         _selfCanvas.overrideSorting = false;
         transform.localScale = Vector3.one;
-        EventManager.Instance.TriggerEvent(
-            new Evt_TryPlayCard() {
-                Owner = Owner,
-                Target = GameMgr.Instance.Battle.GetAnother(Owner),
-                Card = Data
-            });
+        if (Mathf.Abs(transform.localPosition.y)< (transform as RectTransform).rect.height)
+        {
+            transform.localPosition = Vector3.zero;
+            return;
+        }
+
+        var battleState = GameMgr.Instance.Battle;
+        if (GameMgr.Instance.CurrState == battleState)
+        {
+            if (battleState.CanPlay(Owner,Data))
+            {
+                EventManager.Instance.TriggerEvent(
+                    new Evt_TryPlayCard()
+                    {
+                        Owner = Owner,
+                        Target = GameMgr.Instance.Battle.GetAnother(Owner),
+                        Card = Data
+                    });
+            }
+        }
     }
 }
