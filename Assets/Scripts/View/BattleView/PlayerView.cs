@@ -15,6 +15,10 @@ public class PlayerView : MonoBehaviour
     public Slider EnemyHP;
     public Slider EnemyMP;
 
+    public Text PlayerAPCount;
+    public Slider PlayerHP;
+    public Slider PlayerMP;
+
     private Actor _player;
     private Actor _enemy;
     private HandLayout _handView;
@@ -52,6 +56,8 @@ public class PlayerView : MonoBehaviour
         _player = initEvt.Player;
         _enemy = initEvt.Enemy;
         InitEnemy(_enemy);
+        UpdateEnemyInfo();
+        UpdatePlayerInfo();
     }
 
     void OnTakeCard(EventDataBase evt)
@@ -69,7 +75,7 @@ public class PlayerView : MonoBehaviour
         var target = e.Target;
         if (target == _player)
         {
-
+            UpdatePlayerInfo();
         }
         else
         {
@@ -93,6 +99,13 @@ public class PlayerView : MonoBehaviour
         EnemyMP.value = (float)_enemy.Mp / _enemy.MpMax;
     }
 
+    private void UpdatePlayerInfo()
+    {
+        PlayerAPCount.text = _player.Ap.ToString();
+        PlayerHP.value = (float)_player.Hp / _player.HpMax;
+        PlayerMP.value = (float)_player.Mp / _player.MpMax;
+    }
+
     private void SpawnCardView(Actor actor,Card card)
     {
         var self = actor;
@@ -103,7 +116,6 @@ public class PlayerView : MonoBehaviour
         var view = obj.GetComponentInChildren<CardView>();
         view.Owner = actor;
         view.Init(card as GameCard);
-        (obj.transform as RectTransform).sizeDelta = new Vector2(280, 390);
         hand.Add(obj);
     }
 

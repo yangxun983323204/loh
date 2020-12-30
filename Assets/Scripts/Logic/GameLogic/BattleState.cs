@@ -89,7 +89,7 @@ public class BattleState : GameMgr.GameState
         var owner = evtTryPlay.Owner;
         var target = evtTryPlay.Target;
         var card = evtTryPlay.Card;
-        if (owner.Play.Play(card))
+        if (owner.PlayCard(card))
         {
             var cmds = Command.Load(card.CommandsJson);
             if (cmds == null) return;

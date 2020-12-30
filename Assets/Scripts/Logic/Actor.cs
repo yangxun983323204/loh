@@ -87,8 +87,30 @@ public class Actor
             new Evt_ActorPropsChange() { Target = this });
     }
 
-    public bool PlayCheck(CardPlay player, Card card)
+    public bool PlayCard(GameCard card)
     {
-        return true;
+        if (!CanPlayCard(card))
+            return false;
+
+        var s =Play.Play(card);
+        if (s)
+        {
+            switch (card.Type)
+            {
+                case GameCard.CardType.Normal:
+                    break;
+                case GameCard.CardType.Magic:
+                    SetMp(Mp-card.Cost);
+                    break;
+                case GameCard.CardType.Action:
+                    SetAp(Ap-card.Cost);
+                    break;
+                case GameCard.CardType.Equip:
+                    break;
+                default:
+                    break;
+            }
+        }
+        return s;
     }
 }

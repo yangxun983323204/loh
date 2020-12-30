@@ -3,12 +3,12 @@
     "Id":1,
     "Name":"axun",
     "Lv":999,
-    "MaxHp":1000,
-    "MaxAp":1000,
-    "MaxMp":1000,
-    "Hp":1000,
-    "Ap":1000,
-    "Mp":1000,
+    "MaxHp":10,
+    "MaxAp":10,
+    "MaxMp":10,
+    "Hp":10,
+    "Ap":10,
+    "Mp":10,
     "View":"axun"
 },
 {

@@ -1,11 +1,29 @@
 [
-{
-    "Name":"测试卡1",
-    "Desc":"我~就~是~创世神！",
-    "View":"god",
-    "Type":0,
-    "Cost":1,
-    "CommandsJson":"[{\"Key\":\"HpChange\",\"NumArg\":-2}]",
-    "Id":1
-}
+  {
+    "Name": "测试卡1",
+    "Desc": "我~是~创世神！",
+    "View": "god",
+    "Type": 0,
+    "Cost": 1,
+    "CommandsJson": "[{\"Key\":\"HpChange\",\"NumArg\":-2}]",
+    "Id": 1
+  },
+  {
+    "Name": "测试卡2",
+    "Desc": "我~是~创世神！",
+    "View": "god",
+    "Type": 1,
+    "Cost": 1,
+    "CommandsJson": "[{\"Key\":\"HpChange\",\"NumArg\":1}]",
+    "Id": 2
+  },
+  {
+    "Name": "测试卡3",
+    "Desc": "我~是~创世神！",
+    "View": "god",
+    "Type": 2,
+    "Cost": 1,
+    "CommandsJson": "[{\"Key\":\"HpChange\",\"NumArg\":-5}]",
+    "Id": 3
+  }
 ]

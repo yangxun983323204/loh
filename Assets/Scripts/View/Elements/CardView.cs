@@ -8,19 +8,22 @@ using YX;
 
 public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHandler
 {
+    public Canvas SelfCanvas;
+    public RectTransform CanvasRect;
+    public RawImage ActorImg;
+    public Text Name;
+    public Text Desc;
+    public Transform CardTypeRoot;
+
     public Actor Owner { get; set; }
     public GameCard Data { get; set; }
     public bool Draggable { get; set; } = true;
 
-    private RectTransform _canvasRect;
     private Vector3 _dragOffset = Vector2.zero;
-    private Canvas _selfCanvas;
 
     void Start()
     {
-        _canvasRect = GetComponentInParent<Canvas>().transform as RectTransform;
-        _selfCanvas = gameObject.GetComponent<Canvas>();
-        _selfCanvas.overrideSorting = false;
+        SelfCanvas.overrideSorting = false;
     }
 
     public void Init(GameCard card)
@@ -28,11 +31,21 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         Data = card;
         // todo
         var r = Resources.Load<Texture2D>(Path.Combine("CardView",card.View));
-        var img = gameObject.GetComponentInChildren<RawImage>();
-        img.texture = r;
+        ActorImg.texture = r;
+        Name.text = card.Name;
+        Desc.text = card.Desc;
 
-        var desc = gameObject.GetComponentInChildren<Text>();
-        desc.text = card.Desc;
+        var t = (int)card.Type;
+        int i = 0;
+        foreach (Transform tt in CardTypeRoot)
+        {
+            if (i != t)
+                tt.gameObject.SetActive(false);
+            else
+                tt.gameObject.SetActive(true);
+
+            i++;
+        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -41,10 +54,11 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
             return;
 
         Vector3 wpos;
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(_canvasRect,(Vector3)eventData.pointerCurrentRaycast.screenPosition,Camera.main,out wpos);
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(CanvasRect,(Vector3)eventData.pointerCurrentRaycast.screenPosition,Camera.main,out wpos);
         _dragOffset = transform.position - wpos;
-        _selfCanvas.overrideSorting = true;
-        _selfCanvas.sortingOrder = 10;
+        SelfCanvas.overrideSorting = true;
+        SelfCanvas.sortingOrder = 10;
+        transform.localScale = Vector3.one * 2f;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -53,9 +67,8 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
             return;
 
         Vector3 wpos;
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(_canvasRect, (Vector3)eventData.pointerCurrentRaycast.screenPosition, Camera.main, out wpos);
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(CanvasRect, (Vector3)eventData.pointerCurrentRaycast.screenPosition, Camera.main, out wpos);
         transform.position = wpos + _dragOffset;
-        transform.localScale = Vector3.one * 2f;
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -63,7 +76,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         if (!Draggable)
             return;
 
-        _selfCanvas.overrideSorting = false;
+        SelfCanvas.overrideSorting = false;
         transform.localScale = Vector3.one;
         if (Mathf.Abs(transform.localPosition.y)< (transform as RectTransform).rect.height)
         {
