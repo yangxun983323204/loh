@@ -1,23 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class ActionChain<T>
 {
-    List<Func<T, bool>> _chain = new List<Func<T, bool>>(2);
+    public delegate bool Func(ref T val);
 
-    public void Add(Func<T,bool> action)
+    List<Func> _chain = new List<Func>(2);
+
+    public void Add(Func action)
     {
         _chain.Add(action);
     }
 
-    public void Remove(Func<T, bool> action)
+    public void Remove(Func action)
     {
         _chain.Remove(action);
     }
 
-    public void SetAsFirst(Func<T, bool> action)
+    public void SetAsFirst(Func action)
     {
         if (_chain.Count>0 && _chain[0] == action)
         {
@@ -28,18 +29,18 @@ public class ActionChain<T>
         _chain.Insert(0, action);
     }
 
-    public void SetAsLast(Func<T, bool> action)
+    public void SetAsLast(Func action)
     {
         Remove(action);
         Add(action);
     }
 
-    public bool Invoke(T arg)
+    public bool Invoke(ref T arg)
     {
         for (int i = 0; i < _chain.Count; i++)
         {
             var node = _chain[i];
-            var s = node.Invoke(arg);
+            var s = node.Invoke(ref arg);
             if (!s)
             {
                 return false;
@@ -57,19 +58,21 @@ public class ActionChain<T>
 
 public class ActionChain<T1,T2>
 {
-    List<Func<T1, T2, bool>> _chain = new List<Func<T1, T2, bool>>(2);
+    public delegate bool Func(ref T1 val1,ref T2 val2);
 
-    public void Add(Func<T1, T2, bool> action)
+    List<Func> _chain = new List<Func>(2);
+
+    public void Add(Func action)
     {
         _chain.Add(action);
     }
 
-    public void Remove(Func<T1, T2, bool> action)
+    public void Remove(Func action)
     {
         _chain.Remove(action);
     }
 
-    public void SetAsFirst(Func<T1, T2, bool> action)
+    public void SetAsFirst(Func action)
     {
         if (_chain.Count > 0 && _chain[0] == action)
         {
@@ -80,18 +83,18 @@ public class ActionChain<T1,T2>
         _chain.Insert(0, action);
     }
 
-    public void SetAsLast(Func<T1, T2, bool> action)
+    public void SetAsLast(Func action)
     {
         Remove(action);
         Add(action);
     }
 
-    public bool Invoke(T1 arg1,T2 arg2)
+    public bool Invoke(ref T1 arg1,ref T2 arg2)
     {
         for (int i = 0; i < _chain.Count; i++)
         {
             var node = _chain[i];
-            var s = node.Invoke(arg1,arg2);
+            var s = node.Invoke(ref arg1,ref arg2);
             if (!s)
             {
                 return false;

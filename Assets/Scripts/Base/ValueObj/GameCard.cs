@@ -13,15 +13,22 @@ public class GameCard : Card
         Equip,
     }
 
-    public string Name { get; set; }
-    public string Desc { get; set; }
-    public string View { get; set; }
     public CardType Type { get; set; }
     public int Cost { get; set; }
     public string CommandsJson { get; set; }
 
+    public string Name { get; set; }
+    public string Desc { get; set; }
+    public string View { get; set; }
+
+    public string EnemyFx { get; set; } = null;
+    public float EnemyFxTime { get; set; } = 0;
+
+    public string SelfFx { get; set; } = null;
+    public float SelfFxTime { get; set; } = 0;
+
     public override string ToString()
     {
-        return "[Card]".Dye(Color.yellow) + string.Format("id:{0},type:{1},cost:{2},view:{3}\nCmd:{4}", Id, Type, Cost,View,CommandsJson);
+        return "[Card]".Dye(Color.yellow) + $"id:{Id},name:{Name},type:{Type},cost:{Cost}";
     }
 }

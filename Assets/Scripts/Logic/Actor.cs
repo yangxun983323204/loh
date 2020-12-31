@@ -18,8 +18,10 @@ public class Actor
 
     public string View { get;private set; }
 
-    public List<Buff> Buffs { get; set; }
-    public ActionChain<Command> onActionExecute { get; private set; } = new ActionChain<Command>();
+    public List<Buff> Buffs { get;private set; }
+    public ActionChain<float, Command.CommandType> onChangeHp { get; private set; } = new ActionChain<float, Command.CommandType>();
+    public ActionChain<float, Command.CommandType> onChangeMp { get; private set; } = new ActionChain<float, Command.CommandType>();
+    public ActionChain<float, Command.CommandType> onChangeAp { get; private set; } = new ActionChain<float, Command.CommandType>();
 
     public CardPlay Play { get; private set; }
 
@@ -27,6 +29,7 @@ public class Actor
     {
         Play = new CardPlay();
         Play.Owner = this;
+        Buffs = new List<Buff>();
     }
 
     public void SetData(ActorRecord record)
@@ -66,25 +69,73 @@ public class Actor
         return canPlay;
     }
 
-    public void SetHp(float val)
+    public void ChangeHp(float val,Command.CommandType type)
     {
-        Hp = (int)val;
+        if (!onChangeHp.Invoke(ref val,ref type))
+            return;
+
+        Hp += (int)val;
+        if (Hp<=0)
+            Hp = 0;
+
         EventManager.Instance.QueueEvent(
-            new Evt_ActorPropsChange() { Target = this });
+            new Evt_ActorPropChange() { Target = this, PropName = "Hp" });
+
+        if (Hp<=0)
+        {
+            EventManager.Instance.QueueEvent(
+            new Evt_ActorDie() { Target = this });
+        }
     }
 
-    public void SetAp(float val)
+    public void ChangeAp(float val, Command.CommandType type)
     {
-        Ap = (int)val;
+        if (!onChangeAp.Invoke(ref val,ref type))
+            return;
+
+        Ap += (int)val;
         EventManager.Instance.QueueEvent(
-            new Evt_ActorPropsChange() { Target = this });
+            new Evt_ActorPropChange() { Target = this, PropName = "Ap" });
     }
 
-    public void SetMp(float val)
+    public void ChangeMp(float val, Command.CommandType type)
     {
-        Mp = (int)val;
+        if (!onChangeMp.Invoke(ref val,ref type))
+            return;
+
+        Mp += (int)val;
         EventManager.Instance.QueueEvent(
-            new Evt_ActorPropsChange() { Target = this });
+            new Evt_ActorPropChange() { Target = this, PropName = "Mp" });
+    }
+
+    public void AddBuff(Buff.BuffType type,int arg)
+    {
+        var buff = Buff.Create(type, arg);
+        var node = Buffs.Find(i => { return i.Type == type; });
+        if (node!=null)
+        {
+            node.Overlay(buff);
+            var evt = new Evt_UpdateBuff() {Target=this, Data = node };
+            EventManager.Instance.QueueEvent(evt);
+        }
+        else
+        {
+            buff.SetOwner(this);
+            Buffs.Add(buff);
+            var evt = new Evt_AddBuff() { Target = this, Data = buff };
+            EventManager.Instance.QueueEvent(evt);
+        }
+    }
+
+    public void RemoveBuff(Buff.BuffType type)
+    {
+        var node = Buffs.Find(i => { return i.Type == type; });
+        if (node!=null)
+        {
+            Buffs.Remove(node);
+            var evt = new Evt_RemoveBuff() { Target=this, Data = node };
+            EventManager.Instance.QueueEvent(evt);
+        }
     }
 
     public bool PlayCard(GameCard card)
@@ -100,10 +151,10 @@ public class Actor
                 case GameCard.CardType.Normal:
                     break;
                 case GameCard.CardType.Magic:
-                    SetMp(Mp-card.Cost);
+                    ChangeMp(-card.Cost, Command.CommandType.None);
                     break;
                 case GameCard.CardType.Action:
-                    SetAp(Ap-card.Cost);
+                    ChangeAp(Ap-card.Cost, Command.CommandType.None);
                     break;
                 case GameCard.CardType.Equip:
                     break;

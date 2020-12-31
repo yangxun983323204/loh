@@ -55,6 +55,44 @@ public class Evt_InitBattle : Evt_Base
     }
 }
 
+public class Evt_ActorDie : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+
+    public Actor Target { get; set; }
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+}
+
+public class Evt_ActorActionDone : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+
+    public Actor Caller { get; set; }
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+}
+/// <summary>
+/// 一方死亡，退出回合时也使用这个事件，Current为null
+/// </summary>
+public class Evt_InRound : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+
+    public Actor Current { get; set; }
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+}
+
 public class Evt_TakedCard:Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
@@ -115,11 +153,12 @@ public class Evt_DiscardCard : Evt_Base
     }
 }
 
-public class Evt_ActorPropsChange:Evt_Base
+public class Evt_ActorPropChange:Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
 
     public Actor Target { get; set; }
+    public string PropName { get; set; }
 
     public override ulong GetEventType()
     {
@@ -158,6 +197,20 @@ public class Evt_RemoveBuff : Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
 
+    public Actor Target { get; set; }
+    public Buff Data { get; set; }
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+}
+
+public class Evt_UpdateBuff : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+
+    public Actor Target { get; set; }
     public Buff Data { get; set; }
 
     public override ulong GetEventType()

@@ -1,6 +1,6 @@
 [
   {
-    "Name": "测试卡1",
+    "Name": "测试卡-攻击卡",
     "Desc": "我~是~创世神！",
     "View": "god",
     "Type": 0,
@@ -9,7 +9,7 @@
     "Id": 1
   },
   {
-    "Name": "测试卡2",
+    "Name": "测试卡-技能卡",
     "Desc": "我~是~创世神！",
     "View": "god",
     "Type": 1,
@@ -18,12 +18,30 @@
     "Id": 2
   },
   {
-    "Name": "测试卡3",
+    "Name": "测试卡-特技卡",
     "Desc": "我~是~创世神！",
     "View": "god",
     "Type": 2,
     "Cost": 1,
     "CommandsJson": "[{\"Key\":\"HpChange\",\"NumArg\":-5}]",
     "Id": 3
+  },
+  {
+    "Name": "测试卡-技能卡-涂毒",
+    "Desc": "我~是~创世神！",
+    "View": "god",
+    "Type": 1,
+    "Cost": 5,
+    "CommandsJson": "[{\"Key\":\"AddBuff\",\"StrArg\":\"Poison\",\"NumArg\":10}]",
+    "Id": 4
+  },
+  {
+    "Name": "测试卡-技能卡-冰铠",
+    "Desc": "我~是~创世神！",
+    "View": "god",
+    "Type": 1,
+    "Cost": 5,
+    "CommandsJson": "[{\"Key\":\"AddBuff\",\"StrArg\":\"IceArmor\",\"NumArg\":10}]",
+    "Id": 5
   }
 ]

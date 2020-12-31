@@ -5,8 +5,9 @@ using YX;
 
 public class BattleState : GameMgr.GameState
 {
-    public Actor Player;
-    public Actor Enemy;
+    public Actor Current { get; private set; }
+    public Actor Player { get; private set; }
+    public Actor Enemy { get; private set; }
 
     public override string GetName()
     {
@@ -42,10 +43,14 @@ public class BattleState : GameMgr.GameState
     void Bind()
     {
         EventManager.Instance.AddListener(Evt_TryPlayCard.EvtType, OnTryPlayCard);
+        EventManager.Instance.AddListener(Evt_ActorActionDone.EvtType, OnActorActionDone);
+        EventManager.Instance.AddListener(Evt_ActorDie.EvtType, OnActorDie);
     }
     void Unbind()
     {
         EventManager.Instance.RemoveListener(Evt_TryPlayCard.EvtType, OnTryPlayCard);
+        EventManager.Instance.RemoveListener(Evt_ActorActionDone.EvtType, OnActorActionDone);
+        EventManager.Instance.RemoveListener(Evt_ActorDie.EvtType, OnActorDie);
     }
 
     private void OnLoadScene(string name)
@@ -79,8 +84,7 @@ public class BattleState : GameMgr.GameState
             Enemy = Enemy
         });
 
-        Player.Play.Take(5);
-        Enemy.Play.Take(2);
+        NextRound();
     }
 
     void OnTryPlayCard(EventDataBase evt)
@@ -100,5 +104,56 @@ public class BattleState : GameMgr.GameState
                 c.Execute();
             }
         }
+    }
+
+    void OnActorActionDone(EventDataBase e)
+    {
+        NextRound();
+    }
+
+    void OnActorDie(EventDataBase e)
+    {
+        var evt = e as Evt_ActorDie;
+        if (evt.Target == Enemy)// 赢得战斗
+        {
+            Debug.Log("你赢得了战斗".Dye(Color.red));
+        }
+        else// 输了战斗
+        {
+            Debug.Log("你死亡了".Dye(Color.red));
+            GameMgr.Instance.EnterState(GameMgr.Instance.MainMenu);
+        }
+    }
+
+    private void NextRound()
+    {
+        if (Current!=null)
+        {
+            foreach (var buff in Current.Buffs)
+            {
+                buff.RoundEnd();
+            }
+        }
+
+        if (Current != null)
+            Current = GetAnother(Current);
+        else
+            Current = Player;
+
+        foreach (var buff in Current.Buffs)
+        {
+            buff.RoundStart();
+        }
+
+        Current.Play.Take(2);
+        var evt = new Evt_InRound() { Current = Current };
+        EventManager.Instance.QueueEvent(evt);
+    }
+
+    private void ExitRound()
+    {
+        Current = null;
+        var evt = new Evt_InRound() { Current = Current };
+        EventManager.Instance.QueueEvent(evt);
     }
 }

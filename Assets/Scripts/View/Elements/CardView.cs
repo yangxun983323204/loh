@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using System.IO;
 using YX;
 
-public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHandler
+public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     public Canvas SelfCanvas;
     public RectTransform CanvasRect;
@@ -19,6 +19,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
     public GameCard Data { get; set; }
     public bool Draggable { get; set; } = true;
 
+    private bool _isDraging = false;
     private Vector3 _dragOffset = Vector2.zero;
 
     void Start()
@@ -28,6 +29,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
 
     public void Init(GameCard card)
     {
+        _isDraging = false;
         Data = card;
         // todo
         var r = Resources.Load<Texture2D>(Path.Combine("CardView",card.View));
@@ -53,6 +55,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         if (!Draggable)
             return;
 
+        _isDraging = true;
         Vector3 wpos;
         RectTransformUtility.ScreenPointToWorldPointInRectangle(CanvasRect,(Vector3)eventData.pointerCurrentRaycast.screenPosition,Camera.main,out wpos);
         _dragOffset = transform.position - wpos;
@@ -73,6 +76,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        _isDraging = false;
         if (!Draggable)
             return;
 
@@ -87,7 +91,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         var battleState = GameMgr.Instance.Battle;
         if (GameMgr.Instance.CurrState == battleState)
         {
-            if (battleState.CanPlay(Owner,Data))
+            if (battleState.Current == Owner && battleState.CanPlay(Owner,Data))
             {
                 EventManager.Instance.TriggerEvent(
                     new Evt_TryPlayCard()
@@ -97,6 +101,31 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
                         Card = Data
                     });
             }
+            else
+            {
+                transform.localPosition = Vector3.zero;
+            }
         }
+        else
+        {
+            transform.localPosition = Vector3.zero;
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        SelfCanvas.overrideSorting = true;
+        SelfCanvas.sortingOrder = 10;
+        transform.localScale = Vector3.one * 2f;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (_isDraging)
+            return;
+
+        SelfCanvas.overrideSorting = false;
+        transform.localScale = Vector3.one;
+        transform.localPosition = Vector3.zero;
     }
 }

@@ -20,6 +20,7 @@ public class Command
 
         Divinity,
         Dark,
+        Nature,
     }
 
     public enum CommandKey
@@ -30,9 +31,8 @@ public class Command
         MpChange,
         ApChange,
 
-        HpSet,
-        MpSet,
-        ApSet,
+        AddBuff,
+        RemoveBuff,
     }
 
     public Actor Caller;
@@ -41,7 +41,9 @@ public class Command
     public string Key;
     public string Type;
     public float NumArg;
+    public int IntArg { get { return (int)NumArg; } }
     public string StrArg;
+    public T GetStrEnum<T>() where T:Enum { return (T)Enum.Parse(typeof(T), StrArg); }
 
     private CommandKey? _key;
     private CommandType? _type;
@@ -94,24 +96,24 @@ public class Command
 
         switch (GetCmdKey())
         {
+            // 血、蓝改变
             case CommandKey.HpChange:
-                Target.SetHp(Target.Hp + NumArg);
+                Target.ChangeHp(NumArg, GetCmdType());
                 break;
             case CommandKey.MpChange:
-                Target.SetMp(Target.Mp + NumArg);
+                Target.ChangeMp(NumArg, GetCmdType());
                 break;
             case CommandKey.ApChange:
-                Target.SetAp(Target.Ap + NumArg);
+                Target.ChangeAp(NumArg, GetCmdType());
                 break;
-            case CommandKey.HpSet:
-                Target.SetHp(NumArg);
+            // buff增加和移除
+            case CommandKey.AddBuff:
+                Target.AddBuff(GetStrEnum<Buff.BuffType>(),IntArg);
                 break;
-            case CommandKey.MpSet:
-                Target.SetMp(NumArg);
+            case CommandKey.RemoveBuff:
+                Target.RemoveBuff(GetStrEnum<Buff.BuffType>());
                 break;
-            case CommandKey.ApSet:
-                Target.SetAp(NumArg);
-                break;
+            //
             default:
                 break;
         }
