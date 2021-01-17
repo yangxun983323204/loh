@@ -117,10 +117,12 @@ public class BattleState : GameMgr.GameState
         if (evt.Target == Enemy)// 赢得战斗
         {
             Debug.Log("你赢得了战斗".Dye(Color.red));
+            ExitRound();
         }
         else// 输了战斗
         {
             Debug.Log("你死亡了".Dye(Color.red));
+            ExitRound();
             GameMgr.Instance.EnterState(GameMgr.Instance.MainMenu);
         }
     }

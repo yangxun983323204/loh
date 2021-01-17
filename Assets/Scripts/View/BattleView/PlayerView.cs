@@ -241,5 +241,14 @@ public class PlayerView : MonoBehaviour
                 c.Draggable = true;
             }
         }
+        else
+        {
+            BtnNext.enabled = false;
+            var cardviews = _handView.GetComponentsInChildren<CardView>();
+            foreach (var c in cardviews)
+            {
+                c.Draggable = false;
+            }
+        }
     }
 }
