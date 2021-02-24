@@ -88,16 +88,16 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
             return;
         }
 
-        var battleState = GameMgr.Instance.Battle;
-        if (GameMgr.Instance.CurrState == battleState)
+        if (GameMgr.Instance.CurrState is BattleState)
         {
-            if (battleState.Current == Owner && battleState.CanPlay(Owner,Data))
+            var battleState = GameMgr.Instance.CurrState as BattleState;
+            if (battleState.CurrentActor == Owner && battleState.CanPlay(Owner,Data))
             {
                 EventManager.Instance.TriggerEvent(
                     new Evt_TryPlayCard()
                     {
                         Owner = Owner,
-                        Target = GameMgr.Instance.Battle.GetAnother(Owner),
+                        Target = battleState.GetAnother(Owner),
                         Card = Data
                     });
             }

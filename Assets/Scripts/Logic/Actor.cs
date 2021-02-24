@@ -18,7 +18,7 @@ public class Actor
 
     public string View { get;private set; }
 
-    public List<Buff> Buffs { get;private set; }
+    public LinkedListEx<Buff> Buffs { get;private set; }
     public ActionChain<float, Command.CommandType> onChangeHp { get; private set; } = new ActionChain<float, Command.CommandType>();
     public ActionChain<float, Command.CommandType> onChangeMp { get; private set; } = new ActionChain<float, Command.CommandType>();
     public ActionChain<float, Command.CommandType> onChangeAp { get; private set; } = new ActionChain<float, Command.CommandType>();
@@ -29,7 +29,7 @@ public class Actor
     {
         Play = new CardPlay();
         Play.Owner = this;
-        Buffs = new List<Buff>();
+        Buffs = new LinkedListEx<Buff>();
     }
 
     public void SetData(ActorRecord record)
@@ -121,7 +121,7 @@ public class Actor
         else
         {
             buff.SetOwner(this);
-            Buffs.Add(buff);
+            Buffs.AddLast(buff);
             var evt = new Evt_AddBuff() { Target = this, Data = buff };
             EventManager.Instance.QueueEvent(evt);
         }

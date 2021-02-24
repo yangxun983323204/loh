@@ -32,6 +32,27 @@ public class Evt_StartGame : Evt_Base
     }
 }
 
+public class Evt_Back : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+
+    public GameMgr.GameState ActiveState { get;private set; }
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+
+    public Evt_Back()
+    {
+        ActiveState = GameMgr.Instance.CurrState;
+    }
+
+    public bool Self(GameMgr.GameState state)
+    {
+        return state == ActiveState;
+    }
+}
+
 public class Evt_Quit : Evt_Base
 {
     public static readonly ulong EvtType = MakeGuid();
@@ -39,6 +60,23 @@ public class Evt_Quit : Evt_Base
     public override ulong GetEventType()
     {
         return EvtType;
+    }
+}
+
+public class Evt_EnterArea : Evt_Base
+{
+    public static readonly ulong EvtType = MakeGuid();
+
+    public int Id { get; private set; }
+
+    public override ulong GetEventType()
+    {
+        return EvtType;
+    }
+
+    public Evt_EnterArea(int id)
+    {
+        Id = id;
     }
 }
 

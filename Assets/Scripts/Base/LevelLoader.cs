@@ -5,20 +5,39 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
+    public enum Scene
+    {
+        Splash,
+        MainMenu,
+        World,
+        Battle,
+    }
+
     private string _currScene = "Splash";
+    private Dictionary<Scene, string> _scDict;
+
+    private void Awake()
+    {
+        _scDict = new Dictionary<Scene, string>();
+        _scDict.Add(Scene.Splash, "Splash");
+        _scDict.Add(Scene.MainMenu, "MainMenu");
+        _scDict.Add(Scene.World, "World");
+        _scDict.Add(Scene.Battle, "Battle");
+    }
 
     public void MoveGameObjectToScene(GameObject obj)
     {
         SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName(_currScene));
     }
 
-    public void FadeTo(string name,System.Action<string> callback = null)
+    public void FadeTo(Scene sc,System.Action<Scene> callback = null)
     {
-        StartCoroutine(FadeToImpl(name,callback));
+        StartCoroutine(FadeToImpl(sc, callback));
     }
 
-    private IEnumerator FadeToImpl(string name, System.Action<string> callback)
+    private IEnumerator FadeToImpl(Scene sc, System.Action<Scene> callback)
     {
+        var name = _scDict[sc];
         var t0 = Time.time;
         SceneManager.LoadScene("Fade",LoadSceneMode.Additive);
         yield return new WaitForSeconds(1f);
@@ -37,7 +56,7 @@ public class LevelLoader : MonoBehaviour
             yield return new WaitForSeconds(wait);
         }
         
-        callback?.Invoke(name);
+        callback?.Invoke(sc);
     }
 
     private IEnumerator WaitFrame(int cnt)

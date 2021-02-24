@@ -5,7 +5,7 @@ using YX;
 
 public class BattleState : GameMgr.GameState
 {
-    public Actor Current { get; private set; }
+    public Actor CurrentActor { get; private set; }
     public Actor Player { get; private set; }
     public Actor Enemy { get; private set; }
 
@@ -16,7 +16,7 @@ public class BattleState : GameMgr.GameState
 
     public override void OnEnter()
     {
-        GameMgr.Instance.LevelLoader.FadeTo("Battle",OnLoadScene);
+        GameMgr.Instance.LevelLoader.FadeTo(LevelLoader.Scene.Battle,OnLoadScene);
         Bind();
     }
 
@@ -42,27 +42,29 @@ public class BattleState : GameMgr.GameState
 
     void Bind()
     {
+        EventManager.Instance.AddListener(Evt_EnterArea.EvtType, OnEnterArea);
         EventManager.Instance.AddListener(Evt_TryPlayCard.EvtType, OnTryPlayCard);
         EventManager.Instance.AddListener(Evt_ActorActionDone.EvtType, OnActorActionDone);
         EventManager.Instance.AddListener(Evt_ActorDie.EvtType, OnActorDie);
     }
     void Unbind()
     {
+        EventManager.Instance.RemoveListener(Evt_EnterArea.EvtType, OnEnterArea);
         EventManager.Instance.RemoveListener(Evt_TryPlayCard.EvtType, OnTryPlayCard);
         EventManager.Instance.RemoveListener(Evt_ActorActionDone.EvtType, OnActorActionDone);
         EventManager.Instance.RemoveListener(Evt_ActorDie.EvtType, OnActorDie);
     }
 
-    private void OnLoadScene(string name)
+    private void OnLoadScene(LevelLoader.Scene sc)
     {
-        if (name == "Battle")
+        if (sc == LevelLoader.Scene.Battle)
         {
             var gMgr = GameMgr.Create();
-            var player = gMgr.ActorDB.GetActor(1);
-            var deck1 = gMgr.DeckDB.GetDeck(1);
-            var enemy = gMgr.ActorDB.GetActor(2);
-            var deck2 = gMgr.DeckDB.GetDeck(2);
-            GameMgr.Instance.StartCoroutine(InitScene(player, deck1, enemy, deck2));
+            var player = gMgr.DB.Find<ActorRecord>(new ActorRecord.MatchId(1).Check);
+            var deck1 = gMgr.DB.Find<ActorDeckRecord>(new ActorDeckRecord.MatchActorId(1).Check);
+            var enemy = gMgr.DB.Find<ActorRecord>(new ActorRecord.MatchId(2).Check);
+            var deck2 = gMgr.DB.Find<ActorDeckRecord>(new ActorDeckRecord.MatchActorId(2).Check);
+            GameMgr.Instance.StartCoroutine(InitScene(player, deck1.GetDeck(), enemy, deck2.GetDeck()));
         }
     }
 
@@ -85,6 +87,11 @@ public class BattleState : GameMgr.GameState
         });
 
         NextRound();
+    }
+
+    void OnEnterArea(YX.EventDataBase evt)
+    {
+        var e = evt as Evt_EnterArea;
     }
 
     void OnTryPlayCard(EventDataBase evt)
@@ -123,39 +130,33 @@ public class BattleState : GameMgr.GameState
         {
             Debug.Log("你死亡了".Dye(Color.red));
             ExitRound();
-            GameMgr.Instance.EnterState(GameMgr.Instance.MainMenu);
+            GameMgr.Instance.EnterState(GameMgr.StateType.MainMenu);
         }
     }
 
     private void NextRound()
     {
-        if (Current!=null)
+        if (CurrentActor!=null)
         {
-            foreach (var buff in Current.Buffs)
-            {
-                buff.RoundEnd();
-            }
+            CurrentActor.Buffs.Foreach(n =>n.RoundEnd());
         }
 
-        if (Current != null)
-            Current = GetAnother(Current);
+        if (CurrentActor != null)
+            CurrentActor = GetAnother(CurrentActor);
         else
-            Current = Player;
+            CurrentActor = Player;
 
-        foreach (var buff in Current.Buffs)
-        {
-            buff.RoundStart();
-        }
+        CurrentActor.Buffs.Foreach(n=>n.RoundStart());
 
-        Current.Play.Take(2);
-        var evt = new Evt_InRound() { Current = Current };
+        CurrentActor.Play.Take(2);
+        var evt = new Evt_InRound() { Current = CurrentActor };
         EventManager.Instance.QueueEvent(evt);
     }
 
     private void ExitRound()
     {
-        Current = null;
-        var evt = new Evt_InRound() { Current = Current };
+        CurrentActor = null;
+        var evt = new Evt_InRound() { Current = CurrentActor };
         EventManager.Instance.QueueEvent(evt);
     }
 }

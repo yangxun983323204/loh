@@ -9,6 +9,6 @@ public class Entry : MonoBehaviour
     {
         GameMgr.Create();
         yield return new WaitForSeconds(2);
-        GameMgr.Instance.EnterState(GameMgr.Instance.MainMenu);
+        GameMgr.Instance.EnterState(GameMgr.StateType.MainMenu);
     }
 }

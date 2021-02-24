@@ -5,6 +5,13 @@ using YX;
 
 public class GameMgr : MonoBehaviour
 {
+    public enum StateType
+    {
+        MainMenu,
+        WorldMap,
+        Battle,
+    }
+
     public abstract class GameState
     {
         public abstract string GetName();
@@ -16,19 +23,12 @@ public class GameMgr : MonoBehaviour
     private static GameMgr _inst;
     public static GameMgr Instance { get; private set; }
 
-
-    public MainMenuState MainMenu { get; private set; }
-    public BattleState Battle { get; private set; }
-
-    public GameState CurrState { get; set; }
-
-    public IGameCardDB CardDB { get { return _db; } }
-    public IActorDB ActorDB { get { return _db; } }
-    public IActorDeckDB DeckDB { get { return _db; } }
+    public GameState CurrState { get;private set; }
+    public IDB DB { get; private set; }
     public Pool<GameObject> CardPool { get; private set; }
     public LevelLoader LevelLoader { get; private set; }
 
-    private JsonDB _db;
+    private Dictionary<StateType, GameState> _stateDict = new Dictionary<StateType, GameState>();
 
     public static GameMgr Create()
     {
@@ -66,7 +66,7 @@ public class GameMgr : MonoBehaviour
     public void Setup()
     {
         new YX.EventManager();
-        _db = new JsonDB();
+        DB = new NewJsonDB();
         CardPool = new Pool<GameObject>();
         var tmp = Instantiate(Resources.Load<GameObject>("CardView/TCard"));
         var allocator = new GameObjectAllocator();
@@ -75,23 +75,24 @@ public class GameMgr : MonoBehaviour
         LevelLoader = gameObject.AddComponent<LevelLoader>();
         Buff.Reg();
         //
-        MainMenu = new MainMenuState();
-        Battle = new BattleState();
+        _stateDict.Add(StateType.MainMenu, new MainMenuState());
+        _stateDict.Add(StateType.WorldMap, new WorldMapState());
+        _stateDict.Add(StateType.Battle, new BattleState());
     }
 
     public void Shutdown()
     {
         Instance = null;
-        _db.Release();
+        DB.Dispose();
         Application.Quit();
     }
 
-    public void EnterState(GameState state)
+    public void EnterState(StateType type)
     {
         if (CurrState != null)
             CurrState.OnExit();
 
-        CurrState = state;
+        CurrState = _stateDict[type];
         CurrState.OnEnter();
     }
 

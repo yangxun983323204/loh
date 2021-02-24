@@ -26,7 +26,7 @@ namespace GameBuff
             cmd.Key = Command.CommandKey.HpChange.ToString();
             cmd.Type = Command.CommandType.Nature.ToString();
             cmd.NumArg = -Count;
-            cmd.Caller = GameMgr.Instance.Battle.GetAnother(Owner);
+            cmd.Caller = (GameMgr.Instance.CurrState as BattleState).GetAnother(Owner);
             cmd.Target = Owner;
             cmd.Execute();
 

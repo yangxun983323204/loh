@@ -31,4 +31,19 @@ public class GameCard : Card
     {
         return "[Card]".Dye(Color.yellow) + $"id:{Id},name:{Name},type:{Type},cost:{Cost}";
     }
+
+    public class MatchId
+    {
+        private int _id;
+
+        public MatchId(int id)
+        {
+            _id = id;
+        }
+
+        public bool Check(GameCard r)
+        {
+            return r.Id == _id;
+        }
+    }
 }

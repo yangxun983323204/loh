@@ -13,7 +13,7 @@ public class MainMenuState : GameMgr.GameState
     public override void OnEnter()
     {
         Bind();
-        GameMgr.Instance.LevelLoader.FadeTo("MainMenu");
+        GameMgr.Instance.LevelLoader.FadeTo(LevelLoader.Scene.MainMenu);
     }
 
     public override void OnExit()
@@ -35,7 +35,7 @@ public class MainMenuState : GameMgr.GameState
 
     private void OnStartGame(YX.EventDataBase evt)
     {
-        GameMgr.Instance.EnterState(GameMgr.Instance.Battle);
+        GameMgr.Instance.EnterState(GameMgr.StateType.WorldMap);
     }
 
     private void OnQuit(YX.EventDataBase evt)

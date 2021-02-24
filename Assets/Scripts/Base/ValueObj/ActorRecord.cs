@@ -14,4 +14,19 @@ public class ActorRecord
     public int Ap { get; set; }
     public int Mp { get; set; }
     public string View { get; set; }
+
+    public class MatchId
+    {
+        private int _id;
+
+        public MatchId(int id)
+        {
+            _id = id;
+        }
+
+        public bool Check(ActorRecord r)
+        {
+            return r.Id == _id;
+        }
+    }
 }
