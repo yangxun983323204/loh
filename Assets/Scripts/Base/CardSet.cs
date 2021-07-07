@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class CardSet
+public class CardSet
 {
     public int Count { get { return _cardStack.Count; } }
 
     public int Capacity { get; set; }
 
     protected List<Card> _cardStack;
+
+    public CardSet(int capacity)
+    {
+        Capacity = capacity;
+        _cardStack = new List<Card>(Capacity);
+    }
 
     public void Add(Card card)
     {
@@ -114,6 +120,16 @@ public abstract class CardSet
         return _cardStack.IndexOf(card);
     }
 
+    public Card Left(int idx)
+    {
+        return _cardStack[idx];
+    }
+
+    public Card Right(int idx)
+    {
+        return _cardStack[_cardStack.Count - 1 - idx];
+    }
+
     public void Clear()
     {
         _cardStack.Clear();
@@ -127,5 +143,17 @@ public abstract class CardSet
         }
 
         set.Clear();
+    }
+
+    public CardSet Clone()
+    {
+        var newSet = new CardSet(_cardStack.Count);
+        newSet.Capacity = Capacity;
+        foreach (var item in _cardStack)
+        {
+            newSet._cardStack.Add(item);
+        }
+
+        return newSet;
     }
 }

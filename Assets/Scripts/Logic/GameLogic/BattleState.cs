@@ -68,7 +68,7 @@ public class BattleState : GameMgr.GameState
         }
     }
 
-    private IEnumerator InitScene(ActorRecord playerRec, Deck playerDeck, ActorRecord enemyRec, Deck enemyDeck)
+    private IEnumerator InitScene(ActorRecord playerRec, CardSet playerDeck, ActorRecord enemyRec, CardSet enemyDeck)
     {
         yield return null;
         Player = new Actor();

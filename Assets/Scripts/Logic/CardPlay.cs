@@ -10,12 +10,12 @@ public class CardPlay
     public int HandCapacity { get { return _hand.Capacity; } set { _hand.Capacity = value; } }
     public int DeckCount { get { return _deck.Count; }}
 
-    private Deck _deckOrigin;
-    private Deck _deck;
-    private Hand _hand = new Hand();
-    private Grave _grave = new Grave();
+    private CardSet _deckOrigin;
+    private CardSet _deck;
+    private CardSet _hand = new CardSet(5);
+    private CardSet _grave = new CardSet(20);
 
-    public void Init(Deck deck)
+    public void Init(CardSet deck)
     {
         _deckOrigin = deck;
         _deck = deck.Clone();
@@ -64,7 +64,7 @@ public class CardPlay
         while (_hand.Count > 0 && cnt > 0)
         {
             cnt--;
-            var card = _hand.Right();
+            var card = _hand.Right(0);
             Debug.Assert(card != null);
             _hand.Remove(card);
             _grave.Add(card);

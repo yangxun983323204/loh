@@ -8,10 +8,10 @@ public class ActorDeckRecord
     public int ActorId { get; set; }
     public string Cards { get; set; }
 
-    public Deck GetDeck()
+    public CardSet GetDeck()
     {
-        var deck = new Deck();
         string[] ids = Cards.Split(',');
+        var deck = new CardSet(ids.Length);
         foreach (var str in ids)
         {
             var id = int.Parse(str);
