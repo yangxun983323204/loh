@@ -5,7 +5,9 @@
     "View": "god",
     "Type": 0,
     "Cost": 1,
-    "CommandsJson": "[{\"Key\":\"HpChange\",\"NumArg\":-2}]",
+    "Commands": [
+      {"Cmd":"HpChange","ActType":"Other","FArgs":[-1]}
+    ],
     "Id": 1
   },
   {
@@ -14,7 +16,9 @@
     "View": "god",
     "Type": 1,
     "Cost": 1,
-    "CommandsJson": "[{\"Key\":\"HpChange\",\"NumArg\":1}]",
+    "Commands": [
+      {"Cmd":"HpChange","ActType":"Other","FArgs":[1]}
+    ],
     "Id": 2
   },
   {
@@ -23,16 +27,20 @@
     "View": "god",
     "Type": 2,
     "Cost": 1,
-    "CommandsJson": "[{\"Key\":\"HpChange\",\"NumArg\":-5}]",
+    "Commands": [
+      {"Cmd":"HpChange","ActType":"Other","FArgs":[-5]}
+    ],
     "Id": 3
   },
   {
-    "Name": "测试卡-技能卡-涂毒",
+    "Name": "测试卡-技能卡-施毒",
     "Desc": "我~是~创世神！",
     "View": "god",
     "Type": 1,
     "Cost": 5,
-    "CommandsJson": "[{\"Key\":\"AddBuff\",\"StrArg\":\"Poison\",\"NumArg\":10}]",
+    "Commands": [
+      {"Cmd":"AddBuff","ActType":"Other","FArgs":[1]}
+    ],
     "Id": 4
   },
   {
@@ -41,7 +49,9 @@
     "View": "god",
     "Type": 1,
     "Cost": 5,
-    "CommandsJson": "[{\"Key\":\"AddBuff\",\"StrArg\":\"IceArmor\",\"NumArg\":10}]",
+    "Commands": [
+      {"Cmd":"AddBuff","ActType":"Self","FArgs":[2]}
+    ],
     "Id": 5
   }
 ]

@@ -1,0 +1,17 @@
+[
+{
+    "Id":1,
+    "Count":1,
+    "Name":"绿毒",
+    "Desc":"我是绿毒",
+    "View":"Poison",
+    "Triggers":[
+        {
+            "EventKey":"Evt_InRound",
+            "CmdType":"HpChange",
+            "ActType":"Self",
+            "FArgs":[-4]
+        }
+    ]
+}
+]

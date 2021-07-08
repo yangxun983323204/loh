@@ -15,7 +15,7 @@ public class GameCard : Card
 
     public CardType Type { get; set; }
     public int Cost { get; set; }
-    public string CommandsJson { get; set; }
+    public Command[] Commands { get; set; }
 
     public string Name { get; set; }
     public string Desc { get; set; }
@@ -30,20 +30,5 @@ public class GameCard : Card
     public override string ToString()
     {
         return "[Card]".Dye(Color.yellow) + $"id:{Id},name:{Name},type:{Type},cost:{Cost}";
-    }
-
-    public class MatchId
-    {
-        private int _id;
-
-        public MatchId(int id)
-        {
-            _id = id;
-        }
-
-        public bool Check(GameCard r)
-        {
-            return r.Id == _id;
-        }
     }
 }

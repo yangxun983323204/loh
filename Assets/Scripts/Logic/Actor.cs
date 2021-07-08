@@ -19,9 +19,6 @@ public class Actor
     public string View { get;private set; }
 
     public LinkedListEx<Buff> Buffs { get;private set; }
-    public ActionChain<float, Command.CommandType> onChangeHp { get; private set; } = new ActionChain<float, Command.CommandType>();
-    public ActionChain<float, Command.CommandType> onChangeMp { get; private set; } = new ActionChain<float, Command.CommandType>();
-    public ActionChain<float, Command.CommandType> onChangeAp { get; private set; } = new ActionChain<float, Command.CommandType>();
 
     public CardPlay Play { get; private set; }
 
@@ -69,11 +66,8 @@ public class Actor
         return canPlay;
     }
 
-    public void ChangeHp(float val,Command.CommandType type)
+    public void ChangeHp(float val)
     {
-        if (!onChangeHp.Invoke(ref val,ref type))
-            return;
-
         Hp += (int)val;
         if (Hp<=0)
             Hp = 0;
@@ -88,30 +82,28 @@ public class Actor
         }
     }
 
-    public void ChangeAp(float val, Command.CommandType type)
+    public void ChangeAp(float val)
     {
-        if (!onChangeAp.Invoke(ref val,ref type))
-            return;
-
         Ap += (int)val;
+        if (Ap <= 0)
+            Ap = 0;
         EventManager.Instance.QueueEvent(
             new Evt_ActorPropChange() { Target = this, PropName = "Ap" });
     }
 
-    public void ChangeMp(float val, Command.CommandType type)
+    public void ChangeMp(float val)
     {
-        if (!onChangeMp.Invoke(ref val,ref type))
-            return;
-
         Mp += (int)val;
+        if (Mp <= 0)
+            Mp = 0;
         EventManager.Instance.QueueEvent(
             new Evt_ActorPropChange() { Target = this, PropName = "Mp" });
     }
 
-    public void AddBuff(Buff.BuffType type,int arg)
+    public void AddBuff(int id)
     {
-        var buff = Buff.Create(type, arg);
-        var node = Buffs.Find(i => { return i.Type == type; });
+        var buff = Buff.Create(id);
+        var node = Buffs.Find(i => { return i.Id == id; });
         if (node!=null)
         {
             node.Overlay(buff);
@@ -127,9 +119,9 @@ public class Actor
         }
     }
 
-    public void RemoveBuff(Buff.BuffType type)
+    public void RemoveBuff(int id)
     {
-        var node = Buffs.Find(i => { return i.Type == type; });
+        var node = Buffs.Find(i => { return i.Id == id; });
         if (node!=null)
         {
             Buffs.Remove(node);
@@ -151,10 +143,10 @@ public class Actor
                 case GameCard.CardType.Normal:
                     break;
                 case GameCard.CardType.Magic:
-                    ChangeMp(-card.Cost, Command.CommandType.None);
+                    ChangeMp(-card.Cost);
                     break;
                 case GameCard.CardType.Action:
-                    ChangeAp(Ap-card.Cost, Command.CommandType.None);
+                    ChangeAp(Ap-card.Cost);
                     break;
                 case GameCard.CardType.Equip:
                     break;

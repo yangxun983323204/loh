@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActorRecord
+public class ActorRecord: IdObj
 {
-    public int Id { get; set; }
     public string Name { get; set; }
     public int Lv { get; set; }
     public int MaxHp { get; set; }
@@ -14,19 +13,4 @@ public class ActorRecord
     public int Ap { get; set; }
     public int Mp { get; set; }
     public string View { get; set; }
-
-    public class MatchId
-    {
-        private int _id;
-
-        public MatchId(int id)
-        {
-            _id = id;
-        }
-
-        public bool Check(ActorRecord r)
-        {
-            return r.Id == _id;
-        }
-    }
 }

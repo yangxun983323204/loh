@@ -15,18 +15,13 @@ public abstract class Evt_Base : EventDataBase
     {
         return this.GetType().Name;
     }
-
-    protected static ulong MakeGuid()
-    {
-        return (ulong)Guid.NewGuid().ToString().GetHashCode();
-    }
 }
 
 public class Evt_StartGame : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_StartGame";
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -34,10 +29,10 @@ public class Evt_StartGame : Evt_Base
 
 public class Evt_Back : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_Back";
 
     public GameMgr.GameState ActiveState { get;private set; }
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -55,9 +50,9 @@ public class Evt_Back : Evt_Base
 
 public class Evt_Quit : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_Quit";
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -65,11 +60,11 @@ public class Evt_Quit : Evt_Base
 
 public class Evt_EnterArea : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_EnterArea";
 
     public int Id { get; private set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -82,12 +77,12 @@ public class Evt_EnterArea : Evt_Base
 
 public class Evt_InitBattle : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_InitBattle";
 
     public Actor Player { get; set; }
     public Actor Enemy { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -95,11 +90,11 @@ public class Evt_InitBattle : Evt_Base
 
 public class Evt_ActorDie : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_ActorDie";
 
     public Actor Target { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -107,11 +102,11 @@ public class Evt_ActorDie : Evt_Base
 
 public class Evt_ActorActionDone : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_ActorActionDone";
 
     public Actor Caller { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -121,11 +116,11 @@ public class Evt_ActorActionDone : Evt_Base
 /// </summary>
 public class Evt_InRound : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_InRound";
 
     public Actor Current { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -133,11 +128,11 @@ public class Evt_InRound : Evt_Base
 
 public class Evt_TakedCard:Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_TakedCard";
     public Actor Owner { get; set; }
     public GameCard Card { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -145,10 +140,10 @@ public class Evt_TakedCard:Evt_Base
 
 public class Evt_TakeCardFailed : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_TakeCardFailed";
     public Actor Owner { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -156,12 +151,12 @@ public class Evt_TakeCardFailed : Evt_Base
 
 public class Evt_TryPlayCard:Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_TryPlayCard";
     public Actor Owner { get; set; }
     public Actor Target { get; set; }
     public GameCard Card { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -169,11 +164,11 @@ public class Evt_TryPlayCard:Evt_Base
 
 public class Evt_PlayedCard:Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_PlayedCard";
     public Actor Owner { get; set; }
     public GameCard Card { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -181,11 +176,11 @@ public class Evt_PlayedCard:Evt_Base
 
 public class Evt_DiscardCard : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_DiscardCard";
     public Actor Owner { get; set; }
     public GameCard Card { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -193,12 +188,12 @@ public class Evt_DiscardCard : Evt_Base
 
 public class Evt_ActorPropChange:Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_ActorPropChange";
 
     public Actor Target { get; set; }
     public string PropName { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -206,12 +201,12 @@ public class Evt_ActorPropChange:Evt_Base
 
 public class Evt_CmdExec : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_CmdExec";
 
     public Actor Target { get; set; }
     public Command Cmd { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -220,12 +215,12 @@ public class Evt_CmdExec : Evt_Base
 
 public class Evt_AddBuff : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_AddBuff";
 
     public Actor Target { get; set; }
     public Buff Data { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -233,12 +228,12 @@ public class Evt_AddBuff : Evt_Base
 
 public class Evt_RemoveBuff : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_RemoveBuff";
 
     public Actor Target { get; set; }
     public Buff Data { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }
@@ -246,12 +241,12 @@ public class Evt_RemoveBuff : Evt_Base
 
 public class Evt_UpdateBuff : Evt_Base
 {
-    public static readonly ulong EvtType = MakeGuid();
+    public static readonly string EvtType = "Evt_UpdateBuff";
 
     public Actor Target { get; set; }
     public Buff Data { get; set; }
 
-    public override ulong GetEventType()
+    public override string GetEventType()
     {
         return EvtType;
     }

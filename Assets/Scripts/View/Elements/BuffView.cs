@@ -18,7 +18,7 @@ public class BuffView : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
     public void SetData(Buff buff)
     {
         Data = buff;
-        Icon.sprite = Resources.Load<Sprite>($"BuffView/{buff.Id}");
+        Icon.sprite = Resources.Load<Sprite>($"BuffView/{buff.View}");
         TextRoot.gameObject.SetActive(false);
         UpdateProps();
     }

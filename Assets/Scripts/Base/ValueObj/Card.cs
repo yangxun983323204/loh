@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Card
+public class Card: IdObj
 {
-    public int Id { get; set; }
-
     public override string ToString()
     {
         return Id.ToString();

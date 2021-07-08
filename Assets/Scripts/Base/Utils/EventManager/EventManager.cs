@@ -5,7 +5,7 @@ using UnityEngine;
 namespace YX
 {
     using EventListenerList = LinkedList<System.Action<YX.EventDataBase>>;
-    using EventListenerMap = DictAccessor<ulong, LinkedList<System.Action<YX.EventDataBase>>>;
+    using EventListenerMap = DictAccessor<string, LinkedList<System.Action<YX.EventDataBase>>>;
     using EventQueue = LinkedList<EventDataBase>;
 
     public class EventManager
@@ -15,7 +15,7 @@ namespace YX
         private EventQueue[] _evtQueue = new EventQueue[BUFFER_COUNT];
         private int _activeQueueIdx = 0;
 
-        private System.Func<ulong, EventListenerList> _listCtor;
+        private System.Func<string, EventListenerList> _listCtor;
 
         public static EventManager Instance { get; private set; }
 
@@ -32,7 +32,7 @@ namespace YX
             }
         }
 
-        public bool AddListener(ulong type,System.Action<EventDataBase> callback)
+        public bool AddListener(string type,System.Action<EventDataBase> callback)
         {
             var listeners = _evtListenerMap.GetOrNew(type, _listCtor);
             if (!listeners.Contains(callback))
@@ -44,7 +44,7 @@ namespace YX
             return false;
         }
 
-        public bool RemoveListener(ulong type, System.Action<EventDataBase> callback)
+        public bool RemoveListener(string type, System.Action<EventDataBase> callback)
         {
             var listeners = _evtListenerMap.Get(type, null);
             if (listeners == null)
@@ -86,7 +86,7 @@ namespace YX
             return true;
         }
 
-        public bool AbortEvent(ulong type,bool all=false)
+        public bool AbortEvent(string type,bool all=false)
         {
             bool hasEvt = false;
             var queue = _evtQueue[_activeQueueIdx];

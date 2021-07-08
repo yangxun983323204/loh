@@ -7,23 +7,7 @@ using YX;
 
 public class Command
 {
-    public enum CommandType
-    {
-        None,
-
-        Weapon,
-
-        Fire,
-        Ice,
-        Light,
-        Gas,
-
-        Divinity,
-        Dark,
-        Nature,
-    }
-
-    public enum CommandKey
+    public enum CmdType
     {
         None,
 
@@ -31,96 +15,101 @@ public class Command
         MpChange,
         ApChange,
 
+        HpSet,
+        MpSet,
+        ApSet,
+
         AddBuff,
         RemoveBuff,
     }
 
-    public Actor Caller;
-    public Actor Target;
-
-    public string Key;
-    public string Type;
-    public float NumArg;
-    public int IntArg { get { return (int)NumArg; } }
-    public string StrArg;
-    public T GetStrEnum<T>() where T:Enum { return (T)Enum.Parse(typeof(T), StrArg); }
-
-    private CommandKey? _key;
-    private CommandType? _type;
-
-    public CommandKey GetCmdKey()
+    public enum ActionType
     {
-        if (!_key.HasValue)
-        {
-            try
-            {
-                _key = (CommandKey)Enum.Parse(typeof(CommandKey), Key);
-            }
-            catch (Exception)
-            {
-                Debug.LogError("解析CommandKey失败");
-                _key = CommandKey.None;
-            }
-        }
-
-        return _key.Value;
+        None,
+        Self,
+        Other,
+        Both,
     }
 
-    public CommandType GetCmdType()
-    {
-        if (!_type.HasValue)
-        {
-            try
-            {
-                _type = (CommandType)Enum.Parse(typeof(CommandType), Type);
-            }
-            catch (Exception)
-            {
-                Debug.LogWarning("解析CommandType失败");
-                _type = CommandType.None;
-            }
-        }
+    public Actor Caller { get;private set; }
+    public Actor Other { get;private set; }
 
-        return _type.Value;
+    public CmdType Cmd;
+    public ActionType ActType;
+    public float[] FArgs;
+    public string[] SArgs;
+
+    public void SetCaller(Actor caller)
+    {
+        Caller = caller;
+        Other = (GameMgr.Instance.CurrState as BattleState).GetAnother(caller);
     }
 
-    public void Execute()
+    List<Actor> _targets = new List<Actor>(2);
+    public List<Actor> GetCmdTargets()
     {
-        if (GetCmdKey() == CommandKey.None)
-            return;
+        _targets.Clear();
+        switch (ActType)
+        {
+            case ActionType.None:
+                break;
+            case ActionType.Self:
+                _targets.Add(Caller);
+                break;
+            case ActionType.Other:
+                _targets.Add(Other);
+                break;
+            case ActionType.Both:
+                _targets.Add(Other);
+                _targets.Add(Caller);
+                break;
+            default:
+                break;
+        }
+        return _targets;
+    }
+
+    public bool Execute()
+    {
+        if (Cmd == CmdType.None)
+            return true;
 
         EventManager.Instance.QueueEvent(new Evt_CmdExec() {
-            Target = Target,
+            Target = Other,
             Cmd = this
         });
 
-        switch (GetCmdKey())
+        var targets = GetCmdTargets();
+
+        switch (Cmd)
         {
             // 血、蓝改变
-            case CommandKey.HpChange:
-                Target.ChangeHp(NumArg, GetCmdType());
+            case CmdType.HpChange:
+                foreach (var tar in targets)
+                    tar.ChangeHp(FArgs[0]);
                 break;
-            case CommandKey.MpChange:
-                Target.ChangeMp(NumArg, GetCmdType());
+            case CmdType.MpChange:
+                foreach (var tar in targets)
+                    tar.ChangeMp(FArgs[0]);
                 break;
-            case CommandKey.ApChange:
-                Target.ChangeAp(NumArg, GetCmdType());
+            case CmdType.ApChange:
+                foreach (var tar in targets)
+                    tar.ChangeAp(FArgs[0]);
                 break;
             // buff增加和移除
-            case CommandKey.AddBuff:
-                Target.AddBuff(GetStrEnum<Buff.BuffType>(),IntArg);
+            case CmdType.AddBuff:
+                foreach (var tar in targets)
+                    tar.AddBuff((int)FArgs[0]);
                 break;
-            case CommandKey.RemoveBuff:
-                Target.RemoveBuff(GetStrEnum<Buff.BuffType>());
+            case CmdType.RemoveBuff:
+                foreach (var tar in targets)
+                    tar.RemoveBuff((int)FArgs[0]);
                 break;
             //
             default:
                 break;
         }
-    }
 
-    public static Command[] Load(string json)
-    {
-        return JsonConvert.DeserializeObject<Command[]>(json);
+        return true;
     }
 }

@@ -13,7 +13,7 @@ namespace YX
             _timeStamp = timeStamp;
         }
 
-        public abstract ulong GetEventType();
+        public abstract string GetEventType();
         public virtual float GetTimeStamp() { return _timeStamp; }
         public abstract EventDataBase Clone();
         public abstract string GetName();

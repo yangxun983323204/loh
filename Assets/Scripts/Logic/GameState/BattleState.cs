@@ -55,15 +55,18 @@ public class BattleState : GameMgr.GameState
         EventManager.Instance.RemoveListener(Evt_ActorDie.EvtType, OnActorDie);
     }
 
+    private static IdObj.MatchId _actorRecChecker = new IdObj.MatchId(typeof(ActorRecord), 0);
+    private static IdObj.MatchId _deckRecChecker = new IdObj.MatchId(typeof(ActorDeckRecord), 0);
+
     private void OnLoadScene(LevelLoader.Scene sc)
     {
         if (sc == LevelLoader.Scene.Battle)
         {
             var gMgr = GameMgr.Create();
-            var player = gMgr.DB.Find<ActorRecord>(new ActorRecord.MatchId(1).Check);
-            var deck1 = gMgr.DB.Find<ActorDeckRecord>(new ActorDeckRecord.MatchActorId(1).Check);
-            var enemy = gMgr.DB.Find<ActorRecord>(new ActorRecord.MatchId(2).Check);
-            var deck2 = gMgr.DB.Find<ActorDeckRecord>(new ActorDeckRecord.MatchActorId(2).Check);
+            var player = gMgr.DB.Find<ActorRecord>(_actorRecChecker.SetId(1).Check);
+            var deck1 = gMgr.DB.Find<ActorDeckRecord>(_deckRecChecker.SetId(1).Check);
+            var enemy = gMgr.DB.Find<ActorRecord>(_actorRecChecker.SetId(2).Check);
+            var deck2 = gMgr.DB.Find<ActorDeckRecord>(_deckRecChecker.SetId(2).Check);
             GameMgr.Instance.StartCoroutine(InitScene(player, deck1.GetDeck(), enemy, deck2.GetDeck()));
         }
     }
@@ -102,12 +105,11 @@ public class BattleState : GameMgr.GameState
         var card = evtTryPlay.Card;
         if (owner.PlayCard(card))
         {
-            var cmds = Command.Load(card.CommandsJson);
+            var cmds = card.Commands;
             if (cmds == null) return;
             foreach (var c in cmds)
             {
-                c.Caller = owner;
-                c.Target = target;
+                c.SetCaller(owner);
                 c.Execute();
             }
         }
@@ -136,17 +138,11 @@ public class BattleState : GameMgr.GameState
 
     private void NextRound()
     {
-        if (CurrentActor!=null)
-        {
-            CurrentActor.Buffs.Foreach(n =>n.RoundEnd());
-        }
 
         if (CurrentActor != null)
             CurrentActor = GetAnother(CurrentActor);
         else
             CurrentActor = Player;
-
-        CurrentActor.Buffs.Foreach(n=>n.RoundStart());
 
         CurrentActor.Play.Take(2);
         var evt = new Evt_InRound() { Current = CurrentActor };

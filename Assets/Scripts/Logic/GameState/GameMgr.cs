@@ -73,7 +73,6 @@ public class GameMgr : MonoBehaviour
         CardPool.SetTemplate(tmp, allocator);
         DontDestroyOnLoad(allocator.CacheRoot);
         LevelLoader = gameObject.AddComponent<LevelLoader>();
-        Buff.Reg();
         //
         _stateDict.Add(StateType.MainMenu, new MainMenuState());
         _stateDict.Add(StateType.WorldMap, new WorldMapState());
