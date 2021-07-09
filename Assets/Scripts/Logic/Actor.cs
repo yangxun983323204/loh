@@ -8,6 +8,8 @@ public class Actor
     public int Id { get;private set; }
     public int Lv { get;private set; }
 
+    public string Name { get; set; }
+
     public int HpMax { get; private set; }
     public int ApMax { get; private set; }
     public int MpMax { get; private set; }
@@ -33,6 +35,7 @@ public class Actor
     {
         Id = record.Id;
         Lv = record.Lv;
+        Name = record.Name;
         Hp = record.Hp;
         HpMax = record.Hp;
         Ap = record.Ap;
@@ -68,6 +71,11 @@ public class Actor
 
     public void ChangeHp(float val)
     {
+        // 先trigger一个事件，如果有其它拦截，就可以关注这个消息以完成
+        var willChange = new Evt_ActorPropWillChange() { Target = this, PropName = "Hp", Value = val };
+        EventManager.Instance.TriggerEvent(willChange);
+        val = willChange.Value;
+        //
         Hp += (int)val;
         if (Hp<=0)
             Hp = 0;
@@ -155,5 +163,10 @@ public class Actor
             }
         }
         return s;
+    }
+
+    public override string ToString()
+    {
+        return Name;
     }
 }

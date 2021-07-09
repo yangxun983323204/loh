@@ -6,7 +6,7 @@
     "Type": 0,
     "Cost": 1,
     "Commands": [
-      {"Cmd":"HpChange","ActType":"Other","FArgs":[-1]}
+        {"Cmd":"HpChange","ActType":"Other","FArg":-1}
     ],
     "Id": 1
   },
@@ -17,7 +17,7 @@
     "Type": 1,
     "Cost": 1,
     "Commands": [
-      {"Cmd":"HpChange","ActType":"Other","FArgs":[1]}
+        {"Cmd":"HpChange","ActType":"Other","FArg":1}
     ],
     "Id": 2
   },
@@ -28,7 +28,7 @@
     "Type": 2,
     "Cost": 1,
     "Commands": [
-      {"Cmd":"HpChange","ActType":"Other","FArgs":[-5]}
+        {"Cmd":"HpChange","ActType":"Other","FArg":-5}
     ],
     "Id": 3
   },
@@ -39,7 +39,7 @@
     "Type": 1,
     "Cost": 5,
     "Commands": [
-      {"Cmd":"AddBuff","ActType":"Other","FArgs":[1]}
+        {"Cmd":"AddBuff","ActType":"Other","FArg":1}
     ],
     "Id": 4
   },
@@ -50,7 +50,8 @@
     "Type": 1,
     "Cost": 5,
     "Commands": [
-      {"Cmd":"AddBuff","ActType":"Self","FArgs":[2]}
+        {"Cmd":"Say","ActType":"Self","SArg":"冰霜，守护我！"},
+        {"Cmd":"AddBuff","ActType":"Self","FArg":2}
     ],
     "Id": 5
   }

@@ -7,7 +7,7 @@ public class EnemyView : MonoBehaviour
 {
     Actor _self = null;
     bool _inRound = false;
-    float _thinkSpan = 1;
+    float _thinkSpan = 3;
     float _currTime = 0;
 
     // Start is called before the first frame update
@@ -49,7 +49,9 @@ public class EnemyView : MonoBehaviour
 
     void Think()
     {
-        Debug.Log("对手呆呆的似乎不会攻击。。。".Dye(Color.yellow));
+        var say = new Command() { Cmd = Command.CmdType.Say, SArg = "让你赢吧!".Dye(Color.yellow) };
+        say.SetCaller(_self);
+        say.Execute();
         var evt = new Evt_ActorActionDone() { Caller = _self };
         EventManager.Instance.QueueEvent(evt);
     }

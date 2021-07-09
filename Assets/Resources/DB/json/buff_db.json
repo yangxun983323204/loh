@@ -10,7 +10,7 @@
             "EventKey":"Evt_InRound",
             "CmdType":"HpChange",
             "ActType":"Self",
-            "FArgs":[-4]
+            "FArg":-4
         }
     ]
 }

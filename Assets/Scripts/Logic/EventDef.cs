@@ -111,6 +111,7 @@ public class Evt_ActorActionDone : Evt_Base
         return EvtType;
     }
 }
+
 /// <summary>
 /// 一方死亡，退出回合时也使用这个事件，Current为null
 /// </summary>
@@ -179,6 +180,23 @@ public class Evt_DiscardCard : Evt_Base
     public static readonly string EvtType = "Evt_DiscardCard";
     public Actor Owner { get; set; }
     public GameCard Card { get; set; }
+
+    public override string GetEventType()
+    {
+        return EvtType;
+    }
+}
+
+
+public class Evt_ActorPropWillChange : Evt_Base
+{
+    public static readonly string EvtType = "Evt_ActorPropWillChange";
+
+    public Actor Target { get; set; }
+
+    public string PropName { get; set; }
+
+    public float Value { get; set; }
 
     public override string GetEventType()
     {

@@ -225,7 +225,7 @@ public class PlayerView : MonoBehaviour
         var evt = e as Evt_InRound;
         if (evt.Current == _enemy)
         {
-            BtnNext.enabled = false;
+            BtnNext.gameObject.SetActive(false);
             var cardviews = _handView.GetComponentsInChildren<CardView>();
             foreach (var c in cardviews)
             {
@@ -234,7 +234,7 @@ public class PlayerView : MonoBehaviour
         }
         else if(evt.Current == _player)
         {
-            BtnNext.enabled = true;
+            BtnNext.gameObject.SetActive(true);
             var cardviews = _handView.GetComponentsInChildren<CardView>();
             foreach (var c in cardviews)
             {
@@ -243,7 +243,7 @@ public class PlayerView : MonoBehaviour
         }
         else
         {
-            BtnNext.enabled = false;
+            BtnNext.gameObject.SetActive(false);
             var cardviews = _handView.GetComponentsInChildren<CardView>();
             foreach (var c in cardviews)
             {

@@ -8,9 +8,13 @@ public class Buff:IdObj
     public static Buff Create(int id)
     {
         var buff = GameMgr.Instance.DB.Find<Buff>(_checker.SetId(id).Check);
-        foreach (var t in buff.Triggers)
+        if (buff.Triggers != null)
         {
-            t.Init();
+            foreach (var t in buff.Triggers)
+            {
+                t.Init();
+                t.Parent = buff;
+            }
         }
         return buff;
     }

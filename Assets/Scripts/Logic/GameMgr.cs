@@ -5,6 +5,8 @@ using YX;
 
 public class GameMgr : MonoBehaviour
 {
+    public bool Debug;
+
     public enum StateType
     {
         MainMenu,
@@ -27,6 +29,8 @@ public class GameMgr : MonoBehaviour
     public IDB DB { get; private set; }
     public Pool<GameObject> CardPool { get; private set; }
     public LevelLoader LevelLoader { get; private set; }
+    public ProcessManager ProcessMgr { get; private set; }
+    public FxManager FxMgr { get; set; }
 
     private Dictionary<StateType, GameState> _stateDict = new Dictionary<StateType, GameState>();
 
@@ -73,6 +77,7 @@ public class GameMgr : MonoBehaviour
         CardPool.SetTemplate(tmp, allocator);
         DontDestroyOnLoad(allocator.CacheRoot);
         LevelLoader = gameObject.AddComponent<LevelLoader>();
+        ProcessMgr = new ProcessManager();
         //
         _stateDict.Add(StateType.MainMenu, new MainMenuState());
         _stateDict.Add(StateType.WorldMap, new WorldMapState());
@@ -97,8 +102,10 @@ public class GameMgr : MonoBehaviour
 
     void Update()
     {
+        var dms = (ulong)(Time.deltaTime * 100000);
         EventManager.Instance.Update(200);
-        if(CurrState!=null)
+        ProcessMgr.UpdateProcesses((ulong)dms);
+        if (CurrState!=null)
             CurrState.OnUpdate();
     }
 }
