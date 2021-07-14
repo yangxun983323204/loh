@@ -15,29 +15,64 @@ public class CommandTrigger
     public Buff Parent { get; set; }
 
     private Command _cmd;
-
-    public void Init()
-    {
-        _cmd = new Command();
-        _cmd.Cmd = (Command.CmdType)Enum.Parse(typeof(Command.CmdType),CmdType);
-        _cmd.ActType = (Command.ActionType)Enum.Parse(typeof(Command.ActionType), ActType);
-        _cmd.FArg = FArg;
-        _cmd.SArg = SArg;
-        EventManager.Instance.AddListener(EventKey, OnTrigger);
-    }
+    private bool _triggerOnAdd = false;
+    private bool _triggerOnRemove = false;
 
     public void Destroy()
     {
         EventManager.Instance.RemoveListener(EventKey, OnTrigger);
+        OnRemove();
     }
 
-    public void SetOwner(Actor actor)
+    public void Init(Actor actor)
     {
+        _cmd = new Command();
+        _cmd.Cmd = (Command.CmdType)Enum.Parse(typeof(Command.CmdType), CmdType);
+        _cmd.ActType = (Command.ActionType)Enum.Parse(typeof(Command.ActionType), ActType);
+        _cmd.FArg = FArg;
+        _cmd.SArg = SArg;
         _cmd.SetCaller(actor);
+
+        EventKeyPreprocess();
+        if (EventKey == Buff.EVENT_SELF_Add)
+            _triggerOnAdd = true;
+        else if (EventKey == Buff.EVENT_SELF_REMOVE)
+            _triggerOnRemove = true;
+
+        if (!_triggerOnAdd && !_triggerOnRemove)
+            EventManager.Instance.AddListener(EventKey, OnTrigger);
+        
+        OnAdd();
     }
 
     private void OnTrigger(EventDataBase evt)
     {
         _cmd.Execute();
+    }
+
+    private void OnAdd()
+    {
+        if (_triggerOnAdd)
+        {
+            _cmd.Execute();
+        }
+    }
+
+    private void OnRemove()
+    {
+        if (_triggerOnRemove)
+        {
+            _cmd.Execute();
+        }
+    }
+
+    private void EventKeyPreprocess()
+    {
+        EventKey = EventKey.Replace("{self}", _cmd.Caller.Name);
+    }
+
+    public override string ToString()
+    {
+        return string.Format("{0}->{1}", EventKey, _cmd.ToString());
     }
 }

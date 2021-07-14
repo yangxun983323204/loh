@@ -4,6 +4,8 @@ using YX;
 
 public partial class Command
 {
+    public static bool ExecuteEnable { get; private set; } = true;
+
     public Actor Caller { get; private set; }
     public Actor Other { get; private set; }
     public string SArg;
@@ -17,6 +19,11 @@ public partial class Command
     {
         Caller = caller;
         Other = (GameMgr.Instance.CurrState as BattleState).GetAnother(caller);
+    }
+
+    public override string ToString()
+    {
+        return string.Format("cmd:{0},type:{1},caller:{2}", Cmd.ToString(), ActType.ToString(), Caller.ToString());
     }
 
     List<Actor> _targets = new List<Actor>(2);
@@ -45,58 +52,95 @@ public partial class Command
 
     public bool Execute()
     {
-        if (Cmd == CmdType.None)
-            return true;
-
-        EventManager.Instance.QueueEvent(new Evt_CmdExec()
-        {
-            Target = Other,
-            Cmd = this
-        });
+        if (!ExecuteEnable && Cmd != CmdType.PushTrue && Cmd!= CmdType.SetExecuteEnable)
+            return false;
 
         var targets = GetCmdTargets();
+        EventManager.Instance.QueueEvent(new Evt_CmdExec()
+        {
+            Targets = targets,
+            Cmd = this
+        });
+        float fArg;
+        string sArg;
 
         switch (Cmd)
         {
-            case CmdType.SetIdx:
-                g_idx = (int)FArg;
+            #region 变量操作
+            case CmdType.PushFloat:
+                g_FArgs.Push(FArg);
                 break;
-            case CmdType.SetFloat:
-                g_FArgs[g_idx] = FArg;
+            case CmdType.PushStr:
+                g_SArgs.Push(SArg);
                 break;
-            case CmdType.SetStr:
-                g_SArgs[g_idx] = SArg;
+            case CmdType.PushTrue:
+                g_bool.Push(true);
+                break;
+            case CmdType.PushFalse:
+                g_bool.Push(false);
+                break;
+            case CmdType.PushCaller:
+                g_OArgs.Push(Caller);
+                break;
+            case CmdType.PushOther:
+                g_OArgs.Push(Other);
+                break;
+            #endregion
+            //
+            #region 变量比较
+            case CmdType.CompareActor:
+                var a0 = g_OArgs.Pop();
+                var a1 = g_OArgs.Pop();
+                g_bool.Push(a0 == a1);
+                break;
+            case CmdType.IsRoundOf:
+                var a = g_OArgs.Pop();
+                var curr = (GameMgr.Instance.CurrState as BattleState).CurrentActor;
+                g_bool.Push(a == curr);
+                break;
+            #endregion
+            // 条件判定
+            case CmdType.SetExecuteEnable:
+                var e = g_bool.Pop();
+                ExecuteEnable = e;
                 break;
             // 血、蓝改变
             case CmdType.HpChange:
+                fArg = g_FArgs.Pop();
                 foreach (var tar in targets)
-                    tar.ChangeHp(FArg);
+                    tar.ChangeHp(fArg);
                 break;
             case CmdType.MpChange:
+                fArg = g_FArgs.Pop();
                 foreach (var tar in targets)
-                    tar.ChangeMp(FArg);
+                    tar.ChangeMp(fArg);
                 break;
             case CmdType.ApChange:
+                fArg = g_FArgs.Pop();
                 foreach (var tar in targets)
-                    tar.ChangeAp(FArg);
+                    tar.ChangeAp(fArg);
                 break;
             // buff增加和移除
             case CmdType.AddBuff:
+                fArg = g_FArgs.Pop();
                 foreach (var tar in targets)
-                    tar.AddBuff((int)FArg);
+                    tar.AddBuff((int)fArg);
                 break;
             case CmdType.RemoveBuff:
+                fArg = g_FArgs.Pop();
                 foreach (var tar in targets)
-                    tar.RemoveBuff((int)FArg);
+                    tar.RemoveBuff((int)fArg);
                 break;
             //
             case CmdType.PlayFx:
+                sArg = g_SArgs.Pop();
                 foreach (var tar in targets)
-                    GameMgr.Instance.FxMgr.PlayFx(SArg, tar);
+                    GameMgr.Instance.FxMgr.PlayFx(sArg, tar);
                 break;
             case CmdType.Say:
+                sArg = g_SArgs.Pop();
                 foreach (var tar in targets)
-                    UnityEngine.Debug.LogFormat("{0}:{1}", tar, SArg);
+                    UnityEngine.Debug.LogFormat("{0}:{1}", tar, sArg);
                 break;
             default:
                 break;

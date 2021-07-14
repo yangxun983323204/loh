@@ -49,9 +49,25 @@ public class EnemyView : MonoBehaviour
 
     void Think()
     {
-        var say = new Command() { Cmd = Command.CmdType.Say, SArg = "让你赢吧!".Dye(Color.yellow) };
+        var sArg = new Command() { Cmd = Command.CmdType.PushStr, SArg = "我打!".Dye(Color.yellow) };
+        sArg.Execute();
+        var say = new Command() { Cmd = Command.CmdType.Say, ActType = Command.ActionType.Self };
         say.SetCaller(_self);
         say.Execute();
+
+        if (_self.Play.HandCount > 0)
+        {
+            var battleState = GameMgr.Instance.CurrState as BattleState;
+            var card = _self.Play.HandLeft(0);
+            EventManager.Instance.TriggerEvent(
+                new Evt_TryPlayCard()
+                {
+                    Owner = _self,
+                    Target = battleState.GetAnother(_self),
+                    Card = card as GameCard
+                });
+        }
+
         var evt = new Evt_ActorActionDone() { Caller = _self };
         EventManager.Instance.QueueEvent(evt);
     }

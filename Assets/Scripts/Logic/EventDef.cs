@@ -202,6 +202,17 @@ public class Evt_ActorPropWillChange : Evt_Base
     {
         return EvtType;
     }
+
+    public static string GenDynamicKey(Actor actor,string propName)
+    {
+        return string.Format("Evt_{0}{1}WillChange", actor.Name, propName);
+    }
+
+    public Evt_Dynamic GenDynamicEvt()
+    {
+        var e = new Evt_Dynamic(GenDynamicKey(Target,PropName));
+        return e;
+    }
 }
 
 public class Evt_ActorPropChange:Evt_Base
@@ -221,7 +232,7 @@ public class Evt_CmdExec : Evt_Base
 {
     public static readonly string EvtType = "Evt_CmdExec";
 
-    public Actor Target { get; set; }
+    public List<Actor> Targets { get; set; }
     public Command Cmd { get; set; }
 
     public override string GetEventType()
@@ -267,5 +278,20 @@ public class Evt_UpdateBuff : Evt_Base
     public override string GetEventType()
     {
         return EvtType;
+    }
+}
+
+public class Evt_Dynamic : Evt_Base
+{
+    public override string GetEventType()
+    {
+        return _t;
+    }
+
+    private string _t;
+
+    public Evt_Dynamic(string t)
+    {
+        _t = t;
     }
 }

@@ -8,9 +8,34 @@
     "Triggers":[
         {
             "EventKey":"Evt_InRound",
+            "CmdType":"PushFloat",
+            "ActType":"None",
+            "FArg":-4
+        },
+        {
+            "EventKey":"Evt_InRound",
             "CmdType":"HpChange",
             "ActType":"Self",
-            "FArg":-4
+        }
+    ]
+},
+{
+    "Id":2,
+    "Count":10,
+    "Name":"冰铠",
+    "Desc":"我是冰铠",
+    "View":"IceArmor",
+    "Triggers":[
+        {
+            "EventKey":"Evt_{self}HpWillChange",
+            "CmdType":"PushStr",
+            "ActType":"None",
+            "SArg":"砰！",
+        },
+        {
+            "EventKey":"Evt_{self}HpWillChange",
+            "CmdType":"Say",
+            "ActType":"Self",
         }
     ]
 }

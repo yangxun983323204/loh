@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Buff:IdObj
 {
+    public const string EVENT_SELF_Add = "buff_self_add";
+    public const string EVENT_SELF_REMOVE = "buff_self_remove";
+
     private static MatchId _checker = new MatchId(typeof(Buff), 0);
     public static Buff Create(int id)
     {
@@ -12,7 +15,6 @@ public class Buff:IdObj
         {
             foreach (var t in buff.Triggers)
             {
-                t.Init();
                 t.Parent = buff;
             }
         }
@@ -31,17 +33,23 @@ public class Buff:IdObj
     public void SetOwner(Actor owner)
     {
         Owner = owner;
-        foreach (var t in Triggers)
+        if (Triggers != null)
         {
-            t.SetOwner(owner);
+            foreach (var t in Triggers)
+            {
+                t.Init(owner);
+            }
         }
     }
     public void Destroy()
     {
         Owner = null;
-        foreach (var t in Triggers)
+        if (Triggers != null)
         {
-            t.Destroy();
+            foreach (var t in Triggers)
+            {
+                t.Destroy();
+            }
         }
     }
     public void Overlay(Buff buff)
@@ -50,5 +58,10 @@ public class Buff:IdObj
         {
             Count += buff.Count;
         }
+    }
+
+    public override string ToString()
+    {
+        return Name;
     }
 }

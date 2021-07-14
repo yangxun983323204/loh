@@ -11,9 +11,19 @@ public partial class Command
     {
         None = 0,
 
-        SetIdx,
-        SetFloat,
-        SetStr,
+        PushFloat,
+        PushStr,
+        PushTrue,
+        PushFalse,
+        PushCaller,
+        PushOther,
+
+        CompareFloat,
+        CompareStr,
+        CompareActor,
+        SetExecuteEnable,
+
+        IsRoundOf,
 
         HpChange,
         MpChange,
@@ -38,7 +48,8 @@ public partial class Command
         Both,
     }
 
-    private static int g_idx = 0;
-    private static float[] g_FArgs = new float[256];
-    private static string[] g_SArgs = new string[256];
+    private static Stack<float> g_FArgs = new Stack<float>(256);
+    private static Stack<string> g_SArgs = new Stack<string>(256);
+    private static Stack<Actor> g_OArgs = new Stack<Actor>();
+    private static Stack<bool> g_bool = new Stack<bool>();
 }

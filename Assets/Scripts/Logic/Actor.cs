@@ -74,6 +74,7 @@ public class Actor
         // 先trigger一个事件，如果有其它拦截，就可以关注这个消息以完成
         var willChange = new Evt_ActorPropWillChange() { Target = this, PropName = "Hp", Value = val };
         EventManager.Instance.TriggerEvent(willChange);
+        EventManager.Instance.TriggerEvent(willChange.GenDynamicEvt());
         val = willChange.Value;
         //
         Hp += (int)val;
