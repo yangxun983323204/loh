@@ -11,6 +11,22 @@ public partial class Command
     {
         None = 0,
 
+        SetExecuteEnable,
+        SetExecuteTrue,
+        SetExecuteFalse,
+
+        Add,
+        AddWith,
+        Muti,
+        MutiWith,
+
+        Less,
+        LessWith,
+        Equal,
+        EqualWith,
+        Greater,
+        GreaterWith,
+
         PushFloat,
         PushStr,
         PushTrue,
@@ -18,10 +34,9 @@ public partial class Command
         PushCaller,
         PushOther,
 
-        CompareFloat,
-        CompareStr,
-        CompareActor,
-        SetExecuteEnable,
+        EqualStr,
+        EqualActor,
+        
 
         IsRoundOf,
 
@@ -35,6 +50,7 @@ public partial class Command
 
         AddBuff,
         RemoveBuff,
+        ChangeBuffTier,
 
         PlayFx,
         Say,
@@ -48,8 +64,8 @@ public partial class Command
         Both,
     }
 
-    private static Stack<float> g_FArgs = new Stack<float>(256);
-    private static Stack<string> g_SArgs = new Stack<string>(256);
-    private static Stack<Actor> g_OArgs = new Stack<Actor>();
-    private static Stack<bool> g_bool = new Stack<bool>();
+    internal static Stack<float> g_FArgs = new Stack<float>(256);
+    internal static Stack<string> g_SArgs = new Stack<string>(256);
+    internal static Stack<Actor> g_OArgs = new Stack<Actor>();
+    internal static Stack<bool> g_bool = new Stack<bool>();
 }

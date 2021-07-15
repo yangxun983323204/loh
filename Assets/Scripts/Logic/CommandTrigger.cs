@@ -47,23 +47,29 @@ public class CommandTrigger
 
     private void OnTrigger(EventDataBase evt)
     {
+        InScope();
         _cmd.Execute();
+        OutScope();
     }
 
     private void OnAdd()
     {
+        InScope();
         if (_triggerOnAdd)
         {
             _cmd.Execute();
         }
+        OutScope();
     }
 
     private void OnRemove()
     {
+        InScope();
         if (_triggerOnRemove)
         {
             _cmd.Execute();
         }
+        OutScope();
     }
 
     private void EventKeyPreprocess()
@@ -74,5 +80,15 @@ public class CommandTrigger
     public override string ToString()
     {
         return string.Format("{0}->{1}", EventKey, _cmd.ToString());
+    }
+
+    private void InScope()
+    {
+        GameMgr.Instance.Scope.buff = Parent;
+    }
+
+    private void OutScope()
+    {
+        GameMgr.Instance.Scope.buff = null;
     }
 }

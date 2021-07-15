@@ -43,7 +43,6 @@ public class Buff:IdObj
     }
     public void Destroy()
     {
-        Owner = null;
         if (Triggers != null)
         {
             foreach (var t in Triggers)
@@ -51,6 +50,7 @@ public class Buff:IdObj
                 t.Destroy();
             }
         }
+        Owner = null;
     }
     public void Overlay(Buff buff)
     {
