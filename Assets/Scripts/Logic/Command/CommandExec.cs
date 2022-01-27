@@ -25,7 +25,12 @@ public static class CommandExec
         foreach (var handler in _cmdHandlers)
         {
             if (handler.Execute(env, cmd))
+            {
+                Debug.Log("执行命令:" + cmd.ToString());
                 return;
+            }
         }
+
+        Debug.LogWarning("未支持的命令:" + cmd.ToString());
     }
 }

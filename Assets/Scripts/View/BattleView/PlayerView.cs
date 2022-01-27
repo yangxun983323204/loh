@@ -109,7 +109,7 @@ public class PlayerView : MonoBehaviour
 
     public void InitEnemy(Actor enemy)
     {
-        var res = Resources.Load<GameObject>(Path.Combine("ActorView", enemy.View));
+        var res = Resources.Load<GameObject>(enemy.Data.View);
         var obj = Instantiate(res);
         obj.transform.SetParent(EnemyObj.transform);
         obj.transform.SetAsFirstSibling();
@@ -118,16 +118,14 @@ public class PlayerView : MonoBehaviour
 
     private void UpdateEnemyInfo()
     {
-        EnemyAPCount.text = _enemy.Ap.ToString();
-        EnemyHP.value = (float)_enemy.Hp / _enemy.HpMax;
-        EnemyMP.value = (float)_enemy.Mp / _enemy.MpMax;
+        EnemyAPCount.text = _enemy.Data.Ap.ToString();
+        EnemyHP.value = (float)_enemy.Data.Hp / _enemy.Data.MaxHp;
     }
 
     private void UpdatePlayerInfo()
     {
-        PlayerAPCount.text = _player.Ap.ToString();
-        PlayerHP.value = (float)_player.Hp / _player.HpMax;
-        PlayerMP.value = (float)_player.Mp / _player.MpMax;
+        PlayerAPCount.text = _player.Data.Ap.ToString();
+        PlayerHP.value = (float)_player.Data.Hp / _player.Data.MaxHp;
     }
 
     private void SpawnCardView(Actor actor,Card card)
@@ -149,7 +147,7 @@ public class PlayerView : MonoBehaviour
         if (evt.Owner == _player)
         {
             var cardsView = _handView.GetComponentsInChildren<CardView>();
-            var cv = Array.Find(cardsView, n => { return n.Data == evt.Card; });
+            var cv = Array.Find(cardsView, n => { return n.Data.Value.Id == evt.Card.Id; });
             cv.Data = null;
             var img = cv.gameObject.GetComponentInChildren<RawImage>();
             img.texture = null;
@@ -163,7 +161,7 @@ public class PlayerView : MonoBehaviour
         var evt = e as Evt_AddBuff;
         Debug.Assert(evt.Target != null);
         var buff = _buffPool.Spawn().GetComponent<BuffView>();
-        buff.SetData(evt.Data);
+        buff.SetData(evt.Data.Data);
 
         if (evt.Target == _player)
             buff.transform.SetParent(PlayerBuffList,false);
@@ -184,7 +182,7 @@ public class PlayerView : MonoBehaviour
         int idx = -1;
         foreach (Transform item in tran)
         {
-            if(item.GetComponent<BuffView>().Data == evt.Data)
+            if(item.GetComponent<BuffView>().Data.Id == evt.Data.Data.Id)
             {
                 idx = item.GetSiblingIndex();
                 break;
@@ -211,10 +209,11 @@ public class PlayerView : MonoBehaviour
 
         foreach (Transform item in tran)
         {
-            var buff = item.GetComponent<BuffView>();
-            if (buff.Data == evt.Data)
+            var view = item.GetComponent<BuffView>();
+            if (view.Data.Id == evt.Data.Data.Id)
             {
-                buff.UpdateProps();
+                view.Data = evt.Data.Data;
+                view.UpdateProps();
                 break;
             }
         }

@@ -19,8 +19,8 @@ public class Command
     public Command(CmdType type, ActionType actType,params string[] data)
     {
         Data = new string[data.Length + 2];
-        data[0] = type.ToString();
-        data[1] = actType.ToString();
+        Data[0] = type.ToString();
+        Data[1] = actType.ToString();
         Array.Copy(data, 0, Data, 2, data.Length);
     }
 

@@ -2,24 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Buff:IdObj
+public class Buff
 {
-    public const string EVENT_SELF_Add = "buff_self_add";
-    public const string EVENT_SELF_REMOVE = "buff_self_remove";
-
-    private static MatchId _checker = new MatchId(typeof(Buff), 0);
+    public BuffRecord Data;
+    
     public static Buff Create(int id)
     {
-        var buff = GameMgr.Instance.DB.Find<Buff>(_checker.SetId(id).Check);
-        return buff;
+        var rec = GameMgr.Instance.DB.Find<BuffRecord>(BuffRecord.Checker.SetId(id).Check);
+        var inst = new Buff() { Data = rec };
+        return inst;
     }
 
     public Actor Owner { get; private set; }
-    public int Count { get; set; }
-
-    public string Name { get; set; }
-    public string Desc { get; set; }
-    public string View { get; set; }
 
     public void SetOwner(Actor owner)
     {
@@ -32,14 +26,14 @@ public class Buff:IdObj
 
     public void Overlay(Buff buff)
     {
-        if (buff.Id == Id)
+        if (buff.Data.Id == Data.Id && Data.CanMerge)
         {
-            Count += buff.Count;
+            Data.Count += buff.Data.Count;
         }
     }
 
     public override string ToString()
     {
-        return Name;
+        return Data.Name;
     }
 }

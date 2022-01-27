@@ -3,30 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class IdObj
+public interface IdObj
 {
-    public int Id { get; set; }
+    int Id { get; }
+}
 
-    public class MatchId
+public class MatchId<T> where T:IdObj
+{
+    private int _id;
+
+    public MatchId(int id)
     {
-        private int _id;
-        private Type _t;
+        _id = id;
+    }
 
-        public MatchId(Type type,int id)
-        {
-            _id = id;
-            _t = type;
-        }
+    public MatchId<T> SetId(int id)
+    {
+        _id = id;
+        return this;
+    }
 
-        public MatchId SetId(int id)
-        {
-            _id = id;
-            return this;
-        }
-
-        public bool Check(IdObj r)
-        {
-            return r.Id == _id && r.GetType()==_t;
-        }
+    public bool Check(T r)
+    {
+        return r.Id == _id;
     }
 }

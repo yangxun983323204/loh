@@ -55,8 +55,8 @@ public class BattleState : GameMgr.GameState
         EventManager.Instance.RemoveListener(Evt_ActorDie.EvtType, OnActorDie);
     }
 
-    private static IdObj.MatchId _actorRecChecker = new IdObj.MatchId(typeof(ActorRecord), 0);
-    private static IdObj.MatchId _deckRecChecker = new IdObj.MatchId(typeof(DeckRecord), 0);
+    private static MatchId<ActorRecord> _actorRecChecker = new MatchId<ActorRecord>(0);
+    private static MatchId<DeckRecord> _deckRecChecker = new MatchId<DeckRecord>(0);
 
     private void OnLoadScene(LevelLoader.Scene sc)
     {
@@ -77,10 +77,10 @@ public class BattleState : GameMgr.GameState
         Player = new Actor();
         Enemy = new Actor();
 
-        Player.SetData(playerRec);
+        Player.Data = playerRec;
         Player.Play.Init(playerDeck);
 
-        Enemy.SetData(enemyRec);
+        Enemy.Data = enemyRec;
         Enemy.Play.Init(enemyDeck);
 
         EventManager.Instance.QueueEvent(new Evt_InitBattle()
@@ -107,6 +107,7 @@ public class BattleState : GameMgr.GameState
         {
             var cmds = card.Commands;
             if (cmds == null) return;
+            Debug.Log("执行Card:" + card.ToString());
             owner.Env.SetCommandList(card.Commands);
             owner.Env.Run();
         }

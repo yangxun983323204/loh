@@ -88,9 +88,9 @@ public class MetaCmdImpl: ICommandExec
                 break;
             //
             default:
-                return true;// 没有处理
+                return false;// 没有处理
         }
 
-        return false;// 已经处理
+        return true;// 已经处理
     }
 }

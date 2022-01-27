@@ -30,9 +30,9 @@ public class MetaExCmdImpl:ICommandExec
                 env.PushNum(v1 > cmd.GetArgNum(0) ? 0 : 1);
                 break;
             default:
-                return true;// 没有处理
+                return false;// 没有处理
         }
 
-        return false;// 已经处理
+        return true;// 已经处理
     }
 }

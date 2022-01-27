@@ -13,12 +13,16 @@ public class BuffView : MonoBehaviour,IPointerDownHandler,IPointerUpHandler
     public Text Name;
     public Text Desc;
 
-    public Buff Data { get; private set; }
+    public BuffRecord Data;
 
-    public void SetData(Buff buff)
+    public void SetData(BuffRecord buff)
     {
         Data = buff;
-        Icon.sprite = Resources.Load<Sprite>($"BuffView/{buff.View}");
+        Icon.sprite = Resources.Load<Sprite>(buff.View);
+        if (Icon.sprite == null)
+        {
+            Debug.LogWarning($"加载{0}失败");
+        }
         TextRoot.gameObject.SetActive(false);
         UpdateProps();
     }

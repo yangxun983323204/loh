@@ -61,9 +61,9 @@ public class BattleCmdImpl:ICommandExec
                     UnityEngine.Debug.LogFormat("{0}:{1}", tar, sArg);
                 break;
             default:
-                return true;// 没有处理
+                return false;// 没有处理
         }
 
-        return false;// 已经处理
+        return true;// 已经处理
     }
 }

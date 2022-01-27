@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeckRecord: IdObj
+public struct DeckRecord:IdObj
 {
+    public int Id { get; set; }
     public int ActorId { get; set; }
     public string Cards { get; set; }
 
-    private static MatchId _checker = new MatchId(typeof(Card), 0);
+    private static MatchId<Card> _checker = new MatchId<Card>(0);
 
     public CardSet GetDeck()
     {

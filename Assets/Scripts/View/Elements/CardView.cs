@@ -16,7 +16,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
     public Transform CardTypeRoot;
 
     public Actor Owner { get; set; }
-    public Card Data { get; set; }
+    public Card? Data { get; set; }
     public bool Draggable { get; set; } = true;
 
     private bool _isDraging = false;
@@ -32,7 +32,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         _isDraging = false;
         Data = card;
         // todo
-        var r = Resources.Load<Texture2D>(Path.Combine("CardView",card.View));
+        var r = Resources.Load<Texture2D>(card.View);
         ActorImg.texture = r;
         Name.text = card.Name;
         Desc.text = card.Desc;
@@ -91,14 +91,14 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         if (GameMgr.Instance.CurrState is BattleState)
         {
             var battleState = GameMgr.Instance.CurrState as BattleState;
-            if (battleState.CurrentActor == Owner && battleState.CanPlay(Owner,Data))
+            if (battleState.CurrentActor == Owner && battleState.CanPlay(Owner,Data.Value))
             {
                 EventManager.Instance.TriggerEvent(
                     new Evt_TryPlayCard()
                     {
                         Owner = Owner,
                         Target = battleState.GetAnother(Owner),
-                        Card = Data
+                        Card = Data.Value
                     });
             }
             else

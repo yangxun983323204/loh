@@ -9,12 +9,18 @@ public class CommandEnv
     List<Command> _cmdList = new List<Command>(4);
     int _p = 0;
 
-    public Actor Self { get; }
-    public Actor Enemy { get; }
+    public Actor Self { get; set; }
+    public Actor Enemy
+    {
+        get
+        {
+            return (GameMgr.Instance.CurrState as BattleState).GetAnother(Self);
+        }
+    }
 
     public void SetCommandList(IEnumerable<Command> cmds)
     {
-        Reset();
+        Clear();
         _cmdList.AddRange(cmds);
     }
 
@@ -25,11 +31,13 @@ public class CommandEnv
 
     public void Run()
     {
+        Debug.Log("开始执行命令序列");
         var s = RunStep();
         while (s)
         {
             s = RunStep();
         }
+        Debug.Log("结束执行命令序列");
     }
 
     public bool RunStep()

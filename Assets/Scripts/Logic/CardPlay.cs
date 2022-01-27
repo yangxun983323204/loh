@@ -33,8 +33,8 @@ public class CardPlay
             var card = _deck.Take();
             if (card!=null)
             {
-                _hand.Add(card);
-                EventManager.Instance.QueueEvent(new Evt_TakedCard() { Owner = Owner, Card = card});
+                _hand.Add(card.Value);
+                EventManager.Instance.QueueEvent(new Evt_TakedCard() { Owner = Owner, Card = card.Value});
             }
             else
             {
@@ -65,7 +65,6 @@ public class CardPlay
         {
             cnt--;
             var card = _hand.Right(0);
-            Debug.Assert(card != null);
             _hand.Remove(card);
             _grave.Add(card);
             EventManager.Instance.QueueEvent(new Evt_DiscardCard() { Owner = Owner, Card = card});

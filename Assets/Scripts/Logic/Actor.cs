@@ -5,20 +5,7 @@ using YX;
 
 public class Actor
 {
-    public int Id { get;private set; }
-    public int Lv { get;private set; }
-
-    public string Name { get; set; }
-
-    public int HpMax { get; private set; }
-    public int ApMax { get; private set; }
-    public int MpMax { get; private set; }
-
-    public int Hp { get; private set; }
-    public int Ap { get; private set; }
-    public int Mp { get; private set; }
-
-    public string View { get;private set; }
+    public ActorRecord Data;
 
     public LinkedListEx<Buff> Buffs { get;private set; }
 
@@ -31,20 +18,7 @@ public class Actor
         Play = new CardPlay();
         Play.Owner = this;
         Buffs = new LinkedListEx<Buff>();
-    }
-
-    public void SetData(ActorRecord record)
-    {
-        Id = record.Id;
-        Lv = record.Lv;
-        Name = record.Name;
-        Hp = record.Hp;
-        HpMax = record.Hp;
-        Ap = record.Ap;
-        ApMax = record.Ap;
-        Mp = record.Mp;
-        MpMax = record.Mp;
-        View = record.View;
+        Env.Self = this;
     }
 
     public bool CanPlayCard(Card card)
@@ -56,7 +30,7 @@ public class Actor
                 canPlay = true;
                 break;
             case CardType.Ability:
-                canPlay = card.Cost <= Ap;
+                canPlay = card.Cost <= Data.Ap;
                 break;
             case CardType.Equip:
                 canPlay = true;
@@ -76,17 +50,16 @@ public class Actor
         // 先trigger一个事件，如果有其它拦截，就可以关注这个消息以完成
         var willChange = new Evt_ActorPropWillChange() { Target = this, PropName = "Hp", Value = val };
         EventManager.Instance.TriggerEvent(willChange);
-        EventManager.Instance.TriggerEvent(willChange.GenDynamicEvt());
         val = willChange.Value;
         //
-        Hp += (int)val;
-        if (Hp<=0)
-            Hp = 0;
+        Data.Hp += (int)val;
+        if (Data.Hp <=0)
+            Data.Hp = 0;
 
         EventManager.Instance.QueueEvent(
             new Evt_ActorPropChange() { Target = this, PropName = "Hp" });
 
-        if (Hp<=0)
+        if (Data.Hp <=0)
         {
             EventManager.Instance.QueueEvent(
             new Evt_ActorDie() { Target = this });
@@ -95,26 +68,17 @@ public class Actor
 
     public void ChangeAp(float val)
     {
-        Ap += (int)val;
-        if (Ap <= 0)
-            Ap = 0;
+        Data.Ap += (int)val;
+        if (Data.Ap <= 0)
+            Data.Ap = 0;
         EventManager.Instance.QueueEvent(
             new Evt_ActorPropChange() { Target = this, PropName = "Ap" });
-    }
-
-    public void ChangeMp(float val)
-    {
-        Mp += (int)val;
-        if (Mp <= 0)
-            Mp = 0;
-        EventManager.Instance.QueueEvent(
-            new Evt_ActorPropChange() { Target = this, PropName = "Mp" });
     }
 
     public void AddBuff(int id)
     {
         var buff = Buff.Create(id);
-        var node = Buffs.Find(i => { return i.Id == id; });
+        var node = Buffs.Find(i => { return i.Data.Id == id; });
         if (node!=null)
         {
             node.Overlay(buff);
@@ -132,7 +96,7 @@ public class Actor
 
     public void RemoveBuff(int id)
     {
-        var node = Buffs.Find(i => { return i.Id == id; });
+        var node = Buffs.Find(i => { return i.Data.Id == id; });
         if (node!=null)
         {
             Buffs.Remove(node);
@@ -154,7 +118,7 @@ public class Actor
                 case CardType.Attack:
                     break;
                 case CardType.Ability:
-                    ChangeAp(Ap-card.Cost);
+                    ChangeAp(Data.Ap -card.Cost);
                     break;
                 case CardType.Equip:
                     break;
@@ -169,6 +133,6 @@ public class Actor
 
     public override string ToString()
     {
-        return Name;
+        return Data.Name;
     }
 }

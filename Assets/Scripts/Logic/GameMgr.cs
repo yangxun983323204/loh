@@ -70,9 +70,9 @@ public class GameMgr : MonoBehaviour
     public void Setup()
     {
         new YX.EventManager();
-        DB = new NewJsonDB();
+        DB = new MockDB();
         CardPool = new Pool<GameObject>();
-        var tmp = Instantiate(Resources.Load<GameObject>("CardView/TCard"));
+        var tmp = Instantiate(Resources.Load<GameObject>("view/card/TCard"));
         var allocator = new GameObjectAllocator();
         CardPool.SetTemplate(tmp, allocator);
         DontDestroyOnLoad(allocator.CacheRoot);

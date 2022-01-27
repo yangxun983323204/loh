@@ -55,7 +55,7 @@ public class CardSet
         return false;
     }
 
-    public Card Take()
+    public Card? Take()
     {
         if (_cardStack.Count <= 0)
             return null;
@@ -65,7 +65,7 @@ public class CardSet
         return card;
     }
 
-    public Card Peek(int idx)
+    public Card? Peek(int idx)
     {
         idx = _cardStack.Count - 1 - idx;
         if (idx < 0 || idx >= _cardStack.Count)
@@ -74,7 +74,7 @@ public class CardSet
         return _cardStack[idx];
     }
 
-    public Card PeekRandom()
+    public Card? PeekRandom()
     {
         if (_cardStack.Count <= 0)
             return null;
@@ -83,7 +83,7 @@ public class CardSet
         return _cardStack[idx];
     }
 
-    public Card TakeRandom()
+    public Card? TakeRandom()
     {
         if (_cardStack.Count <= 0)
             return null;

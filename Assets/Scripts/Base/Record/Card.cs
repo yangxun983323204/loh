@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using YX;
 
-public class Card : IdObj
+public struct Card:IdObj
 {
+    public int Id { get; set; }
     public CardType Type { get; set; }
     public int Cost { get; set; }
     public Command[] Commands { get; set; }
@@ -12,12 +13,9 @@ public class Card : IdObj
     public string Name { get; set; }
     public string Desc { get; set; }
     public string View { get; set; }
+    public string Sound { get; set; }
+    public string Effect { get; set; }
 
-    public string EnemyFx { get; set; } = null;
-    public float EnemyFxTime { get; set; } = 0;
-
-    public string SelfFx { get; set; } = null;
-    public float SelfFxTime { get; set; } = 0;
 
     public override string ToString()
     {

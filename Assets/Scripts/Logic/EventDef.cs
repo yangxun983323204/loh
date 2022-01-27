@@ -202,17 +202,6 @@ public class Evt_ActorPropWillChange : Evt_Base
     {
         return EvtType;
     }
-
-    public static string GenDynamicKey(Actor actor,string propName)
-    {
-        return string.Format("Evt_{0}{1}WillChange", actor.Name, propName);
-    }
-
-    public Evt_Dynamic GenDynamicEvt()
-    {
-        var e = new Evt_Dynamic(GenDynamicKey(Target,PropName));
-        return e;
-    }
 }
 
 public class Evt_ActorPropChange:Evt_Base
