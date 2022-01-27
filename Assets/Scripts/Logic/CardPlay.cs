@@ -34,7 +34,7 @@ public class CardPlay
             if (card!=null)
             {
                 _hand.Add(card);
-                EventManager.Instance.QueueEvent(new Evt_TakedCard() { Owner = Owner, Card = card as GameCard });
+                EventManager.Instance.QueueEvent(new Evt_TakedCard() { Owner = Owner, Card = card});
             }
             else
             {
@@ -49,7 +49,7 @@ public class CardPlay
         {
             _hand.Remove(card);
             _grave.Add(card);
-            EventManager.Instance.QueueEvent(new Evt_PlayedCard() { Owner = Owner, Card = card as GameCard });
+            EventManager.Instance.QueueEvent(new Evt_PlayedCard() { Owner = Owner, Card = card});
             return true;
         }
 
@@ -68,7 +68,7 @@ public class CardPlay
             Debug.Assert(card != null);
             _hand.Remove(card);
             _grave.Add(card);
-            EventManager.Instance.QueueEvent(new Evt_DiscardCard() { Owner = Owner, Card = card as GameCard });
+            EventManager.Instance.QueueEvent(new Evt_DiscardCard() { Owner = Owner, Card = card});
         }
     }
 

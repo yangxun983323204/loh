@@ -29,7 +29,7 @@ public class TestHand : MonoBehaviour
 
     private GameObject CreateCard()
     {
-        var card = new GameCard();
+        var card = new Card();
         card.View = "test";
 
         var obj = new GameObject("Card");

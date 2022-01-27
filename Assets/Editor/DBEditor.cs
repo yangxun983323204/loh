@@ -30,9 +30,9 @@ public class DBEditor
         var connection = new SQLiteConnection(path, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
         try
         {
-            connection.CreateTable<GameCard>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
+            connection.CreateTable<Card>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
             connection.CreateTable<ActorRecord>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
-            connection.CreateTable<ActorDeckRecord>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
+            connection.CreateTable<DeckRecord>(CreateFlags.ImplicitPK | CreateFlags.AutoIncPK);
         }
         catch (Exception e)
         {

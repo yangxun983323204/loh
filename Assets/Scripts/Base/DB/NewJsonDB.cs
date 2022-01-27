@@ -12,9 +12,9 @@ public class NewJsonDB : IDB
 
     public NewJsonDB()
     {
-        _fileDict.Add(typeof(GameCard), "carddb");
+        _fileDict.Add(typeof(Card), "carddb");
         _fileDict.Add(typeof(ActorRecord), "actordb");
-        _fileDict.Add(typeof(ActorDeckRecord), "deckdb");
+        _fileDict.Add(typeof(DeckRecord), "deckdb");
         _fileDict.Add(typeof(Buff), "buff_db");
     }
 

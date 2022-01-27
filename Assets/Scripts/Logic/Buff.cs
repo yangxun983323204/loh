@@ -11,13 +11,6 @@ public class Buff:IdObj
     public static Buff Create(int id)
     {
         var buff = GameMgr.Instance.DB.Find<Buff>(_checker.SetId(id).Check);
-        if (buff.Triggers != null)
-        {
-            foreach (var t in buff.Triggers)
-            {
-                t.Parent = buff;
-            }
-        }
         return buff;
     }
 
@@ -28,30 +21,15 @@ public class Buff:IdObj
     public string Desc { get; set; }
     public string View { get; set; }
 
-    public CommandTrigger[] Triggers;
-
     public void SetOwner(Actor owner)
     {
         Owner = owner;
-        if (Triggers != null)
-        {
-            foreach (var t in Triggers)
-            {
-                t.Init(owner);
-            }
-        }
     }
     public void Destroy()
     {
-        if (Triggers != null)
-        {
-            foreach (var t in Triggers)
-            {
-                t.Destroy();
-            }
-        }
         Owner = null;
     }
+
     public void Overlay(Buff buff)
     {
         if (buff.Id == Id)

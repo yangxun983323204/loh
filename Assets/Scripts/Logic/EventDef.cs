@@ -131,7 +131,7 @@ public class Evt_TakedCard:Evt_Base
 {
     public static readonly string EvtType = "Evt_TakedCard";
     public Actor Owner { get; set; }
-    public GameCard Card { get; set; }
+    public Card Card { get; set; }
 
     public override string GetEventType()
     {
@@ -155,7 +155,7 @@ public class Evt_TryPlayCard:Evt_Base
     public static readonly string EvtType = "Evt_TryPlayCard";
     public Actor Owner { get; set; }
     public Actor Target { get; set; }
-    public GameCard Card { get; set; }
+    public Card Card { get; set; }
 
     public override string GetEventType()
     {
@@ -167,7 +167,7 @@ public class Evt_PlayedCard:Evt_Base
 {
     public static readonly string EvtType = "Evt_PlayedCard";
     public Actor Owner { get; set; }
-    public GameCard Card { get; set; }
+    public Card Card { get; set; }
 
     public override string GetEventType()
     {
@@ -179,7 +179,7 @@ public class Evt_DiscardCard : Evt_Base
 {
     public static readonly string EvtType = "Evt_DiscardCard";
     public Actor Owner { get; set; }
-    public GameCard Card { get; set; }
+    public Card Card { get; set; }
 
     public override string GetEventType()
     {

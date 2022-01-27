@@ -21,15 +21,6 @@ public class GameMgr : MonoBehaviour
         public virtual void OnUpdate() { }
         public virtual void OnExit() { }
     }
-    /// <summary>
-    /// 作用域数据，用于支持command
-    /// </summary>
-    internal class ScopeData
-    {
-        public Buff buff;
-        public Actor self;
-        public Actor other;
-    }
 
     private static GameMgr _inst;
     public static GameMgr Instance { get; private set; }
@@ -40,10 +31,6 @@ public class GameMgr : MonoBehaviour
     public LevelLoader LevelLoader { get; private set; }
     public ProcessManager ProcessMgr { get; private set; }
     public FxManager FxMgr { get; set; }
-    /// <summary>
-    /// 当前作用域
-    /// </summary>
-    internal ScopeData Scope { get; private set; } = new ScopeData();
 
     private Dictionary<StateType, GameState> _stateDict = new Dictionary<StateType, GameState>();
 
@@ -95,9 +82,6 @@ public class GameMgr : MonoBehaviour
         _stateDict.Add(StateType.MainMenu, new MainMenuState());
         _stateDict.Add(StateType.WorldMap, new WorldMapState());
         _stateDict.Add(StateType.Battle, new BattleState());
-        // cmd impl
-        Command.g_Impls.Add(MetaCmdImpl.Execute);
-        Command.g_Impls.Add(BattleCmdImpl.Execute);
     }
 
     public void Shutdown()

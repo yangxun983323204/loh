@@ -139,7 +139,7 @@ public class PlayerView : MonoBehaviour
         obj.SetActive(true);
         var view = obj.GetComponentInChildren<CardView>();
         view.Owner = actor;
-        view.Init(card as GameCard);
+        view.Init(card);
         hand.Add(obj);
     }
 

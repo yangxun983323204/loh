@@ -3,16 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using YX;
 
-public class GameCard : Card
+public class Card : IdObj
 {
-    public enum CardType
-    {
-        Normal,
-        Magic,
-        Action,
-        Equip,
-    }
-
     public CardType Type { get; set; }
     public int Cost { get; set; }
     public Command[] Commands { get; set; }

@@ -24,6 +24,8 @@ public class Actor
 
     public CardPlay Play { get; private set; }
 
+    public CommandEnv Env { get; private set; } = new CommandEnv();
+
     public Actor()
     {
         Play = new CardPlay();
@@ -45,21 +47,21 @@ public class Actor
         View = record.View;
     }
 
-    public bool CanPlayCard(GameCard card)
+    public bool CanPlayCard(Card card)
     {
         bool canPlay = false;
         switch (card.Type)
         {
-            case GameCard.CardType.Normal:
+            case CardType.Attack:
                 canPlay = true;
                 break;
-            case GameCard.CardType.Magic:
-                canPlay = card.Cost <= Mp;
-                break;
-            case GameCard.CardType.Action:
+            case CardType.Ability:
                 canPlay = card.Cost <= Ap;
                 break;
-            case GameCard.CardType.Equip:
+            case CardType.Equip:
+                canPlay = true;
+                break;
+            case CardType.Special:
                 canPlay = true;
                 break;
             default:
@@ -139,7 +141,7 @@ public class Actor
         }
     }
 
-    public bool PlayCard(GameCard card)
+    public bool PlayCard(Card card)
     {
         if (!CanPlayCard(card))
             return false;
@@ -149,15 +151,14 @@ public class Actor
         {
             switch (card.Type)
             {
-                case GameCard.CardType.Normal:
+                case CardType.Attack:
                     break;
-                case GameCard.CardType.Magic:
-                    ChangeMp(-card.Cost);
-                    break;
-                case GameCard.CardType.Action:
+                case CardType.Ability:
                     ChangeAp(Ap-card.Cost);
                     break;
-                case GameCard.CardType.Equip:
+                case CardType.Equip:
+                    break;
+                case CardType.Special:
                     break;
                 default:
                     break;

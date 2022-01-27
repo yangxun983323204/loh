@@ -35,7 +35,7 @@ public class BattleState : GameMgr.GameState
             throw new System.NotSupportedException("非战斗对象");
     }
 
-    public bool CanPlay(Actor actor,GameCard card)
+    public bool CanPlay(Actor actor, Card card)
     {
         return actor.CanPlayCard(card);
     }
@@ -56,7 +56,7 @@ public class BattleState : GameMgr.GameState
     }
 
     private static IdObj.MatchId _actorRecChecker = new IdObj.MatchId(typeof(ActorRecord), 0);
-    private static IdObj.MatchId _deckRecChecker = new IdObj.MatchId(typeof(ActorDeckRecord), 0);
+    private static IdObj.MatchId _deckRecChecker = new IdObj.MatchId(typeof(DeckRecord), 0);
 
     private void OnLoadScene(LevelLoader.Scene sc)
     {
@@ -64,9 +64,9 @@ public class BattleState : GameMgr.GameState
         {
             var gMgr = GameMgr.Create();
             var player = gMgr.DB.Find<ActorRecord>(_actorRecChecker.SetId(1).Check);
-            var deck1 = gMgr.DB.Find<ActorDeckRecord>(_deckRecChecker.SetId(1).Check);
+            var deck1 = gMgr.DB.Find<DeckRecord>(_deckRecChecker.SetId(1).Check);
             var enemy = gMgr.DB.Find<ActorRecord>(_actorRecChecker.SetId(2).Check);
-            var deck2 = gMgr.DB.Find<ActorDeckRecord>(_deckRecChecker.SetId(2).Check);
+            var deck2 = gMgr.DB.Find<DeckRecord>(_deckRecChecker.SetId(2).Check);
             GameMgr.Instance.StartCoroutine(InitScene(player, deck1.GetDeck(), enemy, deck2.GetDeck()));
         }
     }
@@ -107,11 +107,8 @@ public class BattleState : GameMgr.GameState
         {
             var cmds = card.Commands;
             if (cmds == null) return;
-            foreach (var c in cmds)
-            {
-                c.SetCaller(owner);
-                c.Execute();
-            }
+            owner.Env.SetCommandList(card.Commands);
+            owner.Env.Run();
         }
     }
 

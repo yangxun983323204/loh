@@ -8,7 +8,7 @@ public class TestCardLoad : MonoBehaviour
     void Start()
     {
         var gMgr = GameMgr.Create();
-        var card = new GameCard();
+        var card = new Card();
         card.View = "Prefabs/Card/Test";
         var obj = GameMgr.Instance.CardPool.Spawn();
         var v = obj.GetComponent<CardView>();

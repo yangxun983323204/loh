@@ -16,7 +16,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
     public Transform CardTypeRoot;
 
     public Actor Owner { get; set; }
-    public GameCard Data { get; set; }
+    public Card Data { get; set; }
     public bool Draggable { get; set; } = true;
 
     private bool _isDraging = false;
@@ -27,7 +27,7 @@ public class CardView : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHan
         SelfCanvas.overrideSorting = false;
     }
 
-    public void Init(GameCard card)
+    public void Init(Card card)
     {
         _isDraging = false;
         Data = card;

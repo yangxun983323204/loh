@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActorDeckRecord: IdObj
+public class DeckRecord: IdObj
 {
     public int ActorId { get; set; }
     public string Cards { get; set; }
 
-    private static MatchId _checker = new MatchId(typeof(GameCard), 0);
+    private static MatchId _checker = new MatchId(typeof(Card), 0);
 
     public CardSet GetDeck()
     {
@@ -16,7 +16,7 @@ public class ActorDeckRecord: IdObj
         foreach (var str in ids)
         {
             var id = int.Parse(str);
-            var card = GameMgr.Instance.DB.Find<GameCard>(_checker.SetId(id).Check);
+            var card = GameMgr.Instance.DB.Find<Card>(_checker.SetId(id).Check);
             deck.Add(card);
         }
 

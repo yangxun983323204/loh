@@ -10,6 +10,8 @@ public class EnemyView : MonoBehaviour
     float _thinkSpan = 3;
     float _currTime = 0;
 
+    CommandEnv _cmdEnv = new CommandEnv();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,11 +51,12 @@ public class EnemyView : MonoBehaviour
 
     void Think()
     {
-        var sArg = new Command() { Cmd = Command.CmdType.PushStr, SArg = "我打!".Dye(Color.yellow) };
-        sArg.Execute();
-        var say = new Command() { Cmd = Command.CmdType.Say, ActType = Command.ActionType.Self };
-        say.SetCaller(_self);
-        say.Execute();
+        _cmdEnv.Clear();
+        var sArg = new Command(CmdType.PushStr, ActionType.None, "我打!".Dye(Color.yellow));
+        var say = new Command(CmdType.Say,ActionType.Self);
+        _cmdEnv.AddCommand(sArg);
+        _cmdEnv.AddCommand(say);
+        _cmdEnv.Run();
 
         if (_self.Play.HandCount > 0)
         {
@@ -64,7 +67,7 @@ public class EnemyView : MonoBehaviour
                 {
                     Owner = _self,
                     Target = battleState.GetAnother(_self),
-                    Card = card as GameCard
+                    Card = card
                 });
         }
 
